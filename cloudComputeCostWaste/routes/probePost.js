@@ -9,7 +9,7 @@ router.get('/', function(req, res, next) {
 /* GET home page. */
 router.post('/', function(req, res, next) {
 	console.log(req.body);
-	res.render('index', { title: 'Express' });
+	res.send("ACK\n");
 });
 
 module.exports = router;
