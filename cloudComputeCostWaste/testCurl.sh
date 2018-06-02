@@ -4,10 +4,10 @@
 #sends json data via curl to the probePost
 function send_data (){
 	curl --fail --header "Content-Type: application/json" \
-	  --header 'Expect:' \
-	  --request POST \
-	  --data "$1" \
-	  http://localhost:3000/probePost
+	  	--header 'Expect:' \
+	  	--request POST \
+	  	--data "$1" \
+	  	http://localhost:3000/probePost
 	res=$?
 	return $res
 }

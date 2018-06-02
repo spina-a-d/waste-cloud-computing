@@ -3,8 +3,8 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var session = require('express-session');
-var passport = require('passport');
-var GithubStrategy = require('passport-github').Strategy;
+//var passport = require('passport');
+//var GithubStrategy = require('passport-github').Strategy;
 var mongo = require('mongodb');
 var mongoose = require('mongoose');
 
@@ -43,14 +43,13 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use(cookieParser('test'));
 app.use(session({
     secret: 'test',
     resave: false,
-    saveUninitialized: true,
-    cookie: {}
+    saveUninitialized: true
 }));
 //pasport setup
+/*
 app.use(passport.initialize());
 app.use(passport.session());
 
@@ -124,7 +123,7 @@ passport.deserializeUser(function(id, done) {
         else done(err, null);
     });
 });
-
+*/
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
     var err = new Error('Not Found');
