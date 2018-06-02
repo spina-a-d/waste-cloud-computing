@@ -15,7 +15,6 @@ mongoose.connect(uri);
 var db = mongoose.connection;
 
 var index = require('./routes/index');
-var users = require('./routes/users');
 var api = require('./routes/index');
 var probePost = require('./routes/probePost');
 
@@ -44,7 +43,6 @@ app.use(session({
 //app.use(passport.session());
 
 app.use('/', index);
-app.use('/users', users);
 app.use('/api', api);
 app.use('/probePost', probePost);
 

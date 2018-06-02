@@ -1,11 +1,355 @@
 <!DOCTYPE html>
-<html>
-  <head>
-    <title><%= title %></title>
-    <link rel='stylesheet' href='/stylesheets/style.css' />
-  </head>
-  <body>
-    <h1><%= title %></h1>
-    <p>Welcome to <%= title %></p>
-  </body>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<meta name="title" content="Title">
+		<meta name="description" content="Keyswords, etc.">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+		<script src="http://code.jquery.com/jquery-latest.min.js"></script>
+    	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular.min.js"></script>
+    	<link href="https://fonts.googleapis.com/css?family=Oxygen+Mono" rel="stylesheet"> 
+	</head>
+	<header class="header">
+		<div id="sidebar-wrapper">
+			<div id="mySidenav" class="sidenav">
+			  <span href="javascript:void(0)" id="menu-toggle" onclick="toggleNav()">Menu</span>
+			  <span href="javascript:void(0)" id="sidebar-menu-toggle" onclick="toggleLoginDropdown()">Login</span>
+			  <a id="sidebar-menu-item" href="#">View Data</a>
+			  <a id="sidebar-menu-item" href="#">Register Application</a>
+			  <a id="sidebar-menu-item" href="#">Download Probe</a>
+			  <span href="javascript:void(0)" id="sidebar-menu-toggle" onclick="toggleContact()">Contact</span>
+			</div>
+		</div>
+		<div id="contact-wrapper">
+			<div id="myContactBar" class="contactNav">
+				<a href="javascript:void(0)" class="closebtn" onclick="toggleContact()">&times;</a>
+			  	<a href="#">About</a>
+			 	 <a href="#">Services</a>
+			 	 <a href="#">Clients</a>
+			 	 <a href="#">Contact</a>  
+			</div>
+		</div>
+		<div id="login-wrapper">
+			<div id="myLoginBar" class="login">
+				<a href="javascript:void(0)" class="closebtn" onclick="toggleLoginDropdown()">&times;</a>
+			  	<input id="loginImage" type="image" name="submit" value="login" alt="Login" src="/images/githubLogoCream.png">
+			</div>
+		</div>
+	</header>
+    <!-- Use any element to open the sidenav -->
+		
+	<!-- Add all page content inside this div if you want the side nav to push page content to the right (not used if you only want the sidenav to sit on top of the page -->
+	<div id="wrapper">
+		<div id = "page-content-wrapper">
+            <div class="container-fluid">
+            	<div class="row">
+				    <div id="intro-column" class="col-sm">
+				    	<div class="typewriter">
+				    		<h1>Its time to reduce waste.</h1>
+				    	</div>
+				    </div>
+				</div>
+				<div class="row">
+				    <div id="welcome-column" class="col-sm">
+				    	<h2> Welcome to Cloud Monitoring </h2>
+				    </div>
+				    <div id="info-column" class="col-sm">
+				    	<p>
+				    		The goal of this project is to monitor any instance of a Virtual Machine in a cloud deployment without regard for where that Virtual Machine is in the cloud or even in a local network.  As long as that Virtual Machine has network access to this host it can relay probe data.  Data is logged and displayed to the application own with the intention of displaying cost and in particular waste in that Virtual Machine instance.
+				    	</p>
+				    </div>
+				</div>					
+			</div>
+		</div>
+	</div>
+	<style>
+
+		h2 {
+			padding-top: 60px;
+			padding-left: 20px;
+			font-family: 'Oxygen Mono', monospace;
+		}
+
+		#myLoginBar {
+			top: -300px;
+		}
+
+		#mySidenav {
+			left: -300px;
+		}
+
+		/* The side navigation menu */
+		.sidenav {
+		    height: 100%; /* 100% Full-height */
+		    width: 350px; /* 50 width - change this with JavaScript */
+		    position: fixed; /* Stay in place */
+		    z-index: 1; /* Stay in front */
+		    top: 0; /* Stay at the top */
+		    background-color: #15313C; /* Rainy Blue */
+		    overflow-x: hidden; /* Disable horizontal scroll */
+		    overflow: hidden; /* Allow overflow offscreen */
+		    padding-top: 100px; /* Place content 80px from the top */
+		    transition: 0.5s; /* 0.5 second transition effect to slide in the sidenav */
+		}
+
+		/* The navigation menu links */
+		.sidenav a {
+		    padding: 8px 8px 8px 32px;
+		    text-decoration: none;
+		    font-size: 25px;
+		    color: #D5A47E;
+		    display: block;
+		    transition: 0.3s;
+		}
+
+		/* When you mouse over the navigation links, change their color */
+		.sidenav a:hover {
+		    color: #EEFAB5;
+		}
+
+		/* Position and style the close button (top right corner) */
+		.sidenav #sidebar-menu-toggle {
+			padding: 8px 8px 8px 32px;
+		    text-decoration: none;
+		    font-size: 25px;
+		    color: #D5A47E;
+		    display: block;
+		    transition: 0.3s;
+		}
+
+		/* When you mouse over the navigation links, change their color */
+		.sidenav #sidebar-menu-toggle:hover {
+			color: #EEFAB5;
+		}
+		 
+		/* Position and style the close button (top right corner) */
+		.sidenav #menu-toggle {
+			color: #D5A47E;
+		    position: absolute;
+		    top: 30px;
+		    right: -20px;
+		    font-size: 36px;
+		    margin-left: 50px;
+		    transform: rotate(90deg);
+		    transition: 0.3s;
+		    transition-delay:0.3s;
+		}
+
+		/*contact menu CSS */
+		.contactNav {
+		    height: 100%; /* 100% Full-height */
+		    width: 300px; /* 50 width - change this with JavaScript */
+		    position: fixed; /* Stay in place */
+		    z-index: 1; /* Stay in front */
+		    top: 0; /* Stay at the top */
+		    right: -300px; /* Stay left */
+		    background-color: #15313C; /* Rainy Blue */
+		    overflow-x: hidden; /* Disable horizontal scroll */
+		    overflow: hidden; /* Allow overflow offscreen */
+		    padding-top: 60px; /* Place content 60px from the top */
+		    transition: 0.5s; /* 0.5 second transition effect to slide in the sidenav */
+		}
+
+		/* The contact menu links */
+		.contactNav a {
+		    padding: 8px 8px 8px 32px;
+		    text-decoration: none;
+		    font-size: 25px;
+		    color: #D5A47E;
+		    display: block;
+		    transition: 0.3s;
+		}
+
+		/* When you mouse over the navigation links, change their color */
+		.contactNav a:hover {
+		    color: #EEFAB5;
+		}
+
+		/* Position and style the close button (top left corner) */
+		.contactNav .closebtn {
+		    position: absolute;
+		    top: 0;
+		    left: 0;
+		    font-size: 36px;
+		    margin-right: 50px;
+		}
+
+		/*login menu CSS */
+		.login {
+		    height: 300px; /* 100% Full-height */
+		    width: 300px; /* 50 width - change this with JavaScript */
+		    position: fixed; /* Stay in place */
+		    z-index: 1; /* Stay in front */
+		    left: 20vw; /* Stay left */
+		    background-color: #15313C; /* Rainy Blue */
+		    overflow-x: hidden; /* Disable horizontal scroll */
+		    overflow: hidden; /* Allow overflow offscreen */
+		    padding-top: 60px; /* Place content 60px from the top */
+		    transition: 0.5s; /* 0.5 second transition effect to slide in the sidenav */
+
+		    text-align: center;
+		    padding: 20px 0;
+		    margin: 0px auto 0px auto;
+		}
+
+		/* The contact menu links */
+		.login a {
+		    padding: 8px 8px 8px 32px;
+		    text-decoration: none;
+		    font-size: 25px;
+		    color: #D5A47E;
+		    display: block;
+		    transition: 0.3s;
+		}
+
+		/* Position and style the close button (top left corner) */
+		.login .closebtn {
+		    position: absolute;
+		    top: 0;
+		    right: 10px;
+		    font-size: 36px;
+		}
+
+		#loginImage {
+			margin: 0px auto 0px auto;
+			height: 256px;
+			width: 256px;
+		}
+
+		/* Style page content - use this if you want to push the page content to the right when you open the side navigation */
+		#wrapper {
+		    transition: 0.5s;
+		    margin-left: 50px;
+		}
+
+		/*colouring columns*/
+		#intro-column {
+			padding: 40px;
+		    background-color: #EEFAB5;
+		    color: #15313C;
+		    min-height: 60vh;
+		}
+		#welcome-column {
+			padding: 40px;
+			color: #15313C;
+		    background-color: #856B68;
+		    min-height: 40vh;
+		}
+		#info-column {
+			font-family: 'Oxygen Mono', monospace;
+			color: #15313C;
+			padding: 40px;
+		    background-color: #D5A47E;
+		    min-height: 40vh;
+		}
+		/*typewriter the intro*/
+		.typewriter {
+			padding: 15%;
+		}
+
+		.typewriter h1 {
+			color: #15313C;
+			font-size: 3vw;
+		  	font-family: 'Oxygen Mono', monospace;
+		  	overflow: hidden; /* Ensures the content is not revealed until the animation */
+		  	border-right: .15em solid orange; /* The typwriter cursor */
+		  	white-space: nowrap; /* Keeps the content on a single line */
+		  	margin: 0 auto; /* Gives that scrolling effect as the typing happens */
+		  	letter-spacing: .15em; /* Adjust as needed */
+		  	animation: 
+		    typing 3.5s steps(30, end),
+		    blink-caret .5s step-end infinite;
+		}
+
+		/* The typing effect */
+		@keyframes typing {
+		  	from { width: 0 }
+		  	to { width: 100% }
+		}
+
+		/* The typewriter cursor effect */
+		@keyframes blink-caret {
+		  	from, to { border-color: transparent }
+		  	50% { border-color: #D5A47E }
+		}
+	</style>
+	<script>
+		/* Set the width of the side navigation to 250px and the left margin of the page content to 250px */
+		function toggleNav() {
+			/*if statement needs to be in this order or else it doesn't recognize left style first click*/
+			if(document.getElementById("mySidenav").style.left == "0px") {
+				closeMenu();
+		    	/*rotate menu button*/
+		    	document.getElementById("menu-toggle").style.transform = "rotate(90deg)";
+		    	document.getElementById("menu-toggle").style.top = "30px";
+		    	document.getElementById("menu-toggle").style.right = "-20px";	
+			}
+			else {
+				closeContact();
+				closeLogin();				
+
+				document.getElementById("mySidenav").style.left = "0px";
+		    	document.getElementById("wrapper").style.marginLeft = "350px";
+		    	/*rotate menu button*/
+		    	document.getElementById("menu-toggle").style.transform = "rotate(0deg)";
+		    	document.getElementById("menu-toggle").style.top = "15px";
+		    	document.getElementById("menu-toggle").style.right = "15px";	
+			}
+
+
+		} 
+		/* Toggle contact bar */
+		function toggleContact() {
+			if(document.getElementById("myContactBar").style.right == "0px") {
+				document.getElementById("myContactBar").style.right = "-300px";
+		    	document.getElementById("wrapper").style.marginRight = "0px";
+			}
+			else { //open contact bar
+				document.getElementById("myContactBar").style.right = "0px";
+		    	document.getElementById("wrapper").style.marginRight = "300px";
+
+		    	closeMenu();
+		    	closeLogin();
+
+		    	/*rotate menu button*/
+		    	document.getElementById("menu-toggle").style.transform = "rotate(90deg)";
+		    	document.getElementById("menu-toggle").style.top = "30px";
+		    	document.getElementById("menu-toggle").style.right = "-20px";
+			}
+		}
+
+		function toggleLoginDropdown() {
+			if(document.getElementById("myLoginBar").style.top == "0px") {
+				closeLogin();
+			}
+			else { //open login bar
+				document.getElementById("myLoginBar").style.top = "0px";
+
+		    	closeMenu();
+		    	closeContact();
+			}
+		}
+
+		function closeMenu() {
+			document.getElementById("mySidenav").style.left = "-300px";
+		    document.getElementById("wrapper").style.marginLeft = "50px";
+
+		    /*rotate menu button*/
+	    	document.getElementById("menu-toggle").style.transform = "rotate(90deg)";
+	    	document.getElementById("menu-toggle").style.top = "30px";
+	    	document.getElementById("menu-toggle").style.right = "-20px";	
+		}
+
+		function closeContact() {
+			/*ensure contact bar is closed */
+			document.getElementById("myContactBar").style.right = "-300px";
+			document.getElementById("wrapper").style.marginRight = "0px";
+		}
+
+		function closeLogin(){
+			document.getElementById("myLoginBar").style.top = "-300px";
+		}
+	</script>
 </html>
