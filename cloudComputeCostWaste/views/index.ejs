@@ -16,9 +16,9 @@
 			<div id="mySidenav" class="sidenav">
 			  <span href="javascript:void(0)" id="menu-toggle" onclick="toggleNav()">Menu</span>
 			  <span href="javascript:void(0)" id="sidebar-menu-toggle" onclick="toggleLoginDropdown()">Login</span>
-			  <a id="sidebar-menu-item" href="#">View Data</a>
-			  <a id="sidebar-menu-item" href="#">Register Application</a>
-			  <a id="sidebar-menu-item" href="#">Download Probe</a>
+			  <a id="sidebar-menu-item" href="/viewData">View Data</a>
+			  <a id="sidebar-menu-item" href="/registerApp">Register Application</a>
+			  <a id="sidebar-menu-item" href="/downloadProbe">Download Probe</a>
 			  <span href="javascript:void(0)" id="sidebar-menu-toggle" onclick="toggleContact()">Contact</span>
 			</div>
 		</div>
@@ -33,8 +33,10 @@
 		</div>
 		<div id="login-wrapper">
 			<div id="myLoginBar" class="login">
-				<a href="javascript:void(0)" class="closebtn" onclick="toggleLoginDropdown()">&times;</a>
-			  	<input id="loginImage" type="image" name="submit" value="login" alt="Login" src="/images/githubLogoCream.png">
+				<a id= "loginx" href="javascript:void(0)" class="closebtn" onclick="toggleLoginDropdown()">&times;</a>
+			  	<a href="/auth/github"> 
+			  		<img id="loginImage" alt="Login" src="/images/githubLogoCream.png">
+			  	</a>
 			</div>
 		</div>
 	</header>
@@ -195,7 +197,7 @@
 		}
 
 		/* The contact menu links */
-		.login a {
+		.login #loginx {
 		    padding: 8px 8px 8px 32px;
 		    text-decoration: none;
 		    font-size: 25px;
