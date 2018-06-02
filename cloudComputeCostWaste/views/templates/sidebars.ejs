@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<head>
+	<link rel="stylesheet" href="/stylesheets/sidebars.css">
+	<script src= "/javascripts/sidebars.js"></script>
+</head>
+
+<header class="header">
+	<div id="sidebar-wrapper">
+		<div id="mySidenav" class="sidenav">
+		  <span href="javascript:void(0)" id="menu-toggle" onclick="toggleNav()">Menu</span>
+		  <span href="javascript:void(0)" id="sidebar-menu-toggle" onclick="toggleLoginDropdown()">Login</span>
+		  <a id="sidebar-menu-item" href="/viewData">View Data</a>
+		  <a id="sidebar-menu-item" href="/registerApp">Register Application</a>
+		  <a id="sidebar-menu-item" href="/downloadProbe">Download Probe</a>
+		  <span href="javascript:void(0)" id="sidebar-menu-toggle" onclick="toggleContact()">Contact</span>
+		</div>
+	</div>
+	<div id="contact-wrapper">
+		<div id="myContactBar" class="contactNav">
+			<a href="javascript:void(0)" class="closebtn" onclick="toggleContact()">&times;</a>
+		  	<a href="#">spinaadbusiness@gmail.com</a>
+		 	<a href="#">+31 06 82 88 62 67</a>
+		 	<a href="https://github.com/a-d-spina-student/waste-cloud-computing">Github</a>
+		</div>
+	</div>
+	<div id="login-wrapper">
+		<div id="myLoginBar" class="login">
+			<a id= "loginx" href="javascript:void(0)" class="closebtn" onclick="toggleLoginDropdown()">&times;</a>
+		  	<a href="/auth/github"> 
+		  		<img id="loginImage" alt="Login" src="/images/githubLogoCream.png">
+		  	</a>
+		</div>
+	</div>
+</header>
+  

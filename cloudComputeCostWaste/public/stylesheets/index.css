@@ -1,0 +1,56 @@
+h2 {
+	padding-top: 60px;
+	padding-left: 20px;
+	font-family: 'Oxygen Mono', monospace;
+}
+
+/*colouring columns*/
+#intro-column {
+	padding: 40px;
+    background-color: #EEFAB5;
+    color: #15313C;
+    min-height: 60vh;
+}
+#welcome-column {
+	padding: 40px;
+	color: #15313C;
+    background-color: #856B68;
+    min-height: 40vh;
+}
+#info-column {
+	font-family: 'Oxygen Mono', monospace;
+	color: #15313C;
+	padding: 40px;
+    background-color: #D5A47E;
+    min-height: 40vh;
+}
+/*typewriter the intro*/
+.typewriter {
+	padding: 15%;
+}
+
+.typewriter h1 {
+	color: #15313C;
+	font-size: 3vw;
+  	font-family: 'Oxygen Mono', monospace;
+  	overflow: hidden; /* Ensures the content is not revealed until the animation */
+  	border-right: .15em solid orange; /* The typwriter cursor */
+  	white-space: nowrap; /* Keeps the content on a single line */
+  	margin: 0 auto; /* Gives that scrolling effect as the typing happens */
+  	letter-spacing: .15em; /* Adjust as needed */
+  	animation: 
+    typing 3.5s steps(30, end),
+    blink-caret .5s step-end infinite;
+}
+
+/* The typing effect */
+@keyframes typing {
+  	from { width: 0 }
+  	to { width: 100% }
+}
+
+/* The typewriter cursor effect */
+@keyframes blink-caret {
+  	from, to { border-color: transparent }
+  	50% { border-color: #D5A47E }
+}

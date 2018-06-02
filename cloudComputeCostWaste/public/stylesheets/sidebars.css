@@ -1,0 +1,151 @@
+#myLoginBar {
+	top: -300px;
+}
+
+#mySidenav {
+	left: -300px;
+}
+
+/* The side navigation menu */
+.sidenav {
+    height: 100%; /* 100% Full-height */
+    width: 350px; /* 50 width - change this with JavaScript */
+    position: fixed; /* Stay in place */
+    z-index: 1; /* Stay in front */
+    top: 0; /* Stay at the top */
+    background-color: #15313C; /* Rainy Blue */
+    overflow-x: hidden; /* Disable horizontal scroll */
+    overflow: hidden; /* Allow overflow offscreen */
+    padding-top: 100px; /* Place content 80px from the top */
+    transition: 0.5s; /* 0.5 second transition effect to slide in the sidenav */
+}
+
+/* The navigation menu links */
+.sidenav a {
+    padding: 8px 8px 8px 32px;
+    text-decoration: none;
+    font-size: 25px;
+    color: #D5A47E;
+    display: block;
+    transition: 0.3s;
+}
+
+/* When you mouse over the navigation links, change their color */
+.sidenav a:hover {
+    color: #EEFAB5;
+}
+
+/* Position and style the close button (top right corner) */
+.sidenav #sidebar-menu-toggle {
+	padding: 8px 8px 8px 32px;
+    text-decoration: none;
+    font-size: 25px;
+    color: #D5A47E;
+    display: block;
+    transition: 0.3s;
+}
+
+/* When you mouse over the navigation links, change their color */
+.sidenav #sidebar-menu-toggle:hover {
+	color: #EEFAB5;
+}
+ 
+/* Position and style the close button (top right corner) */
+.sidenav #menu-toggle {
+	color: #D5A47E;
+    position: absolute;
+    top: 30px;
+    right: -20px;
+    font-size: 36px;
+    margin-left: 50px;
+    transform: rotate(90deg);
+    transition: 0.3s;
+    transition-delay:0.3s;
+}
+
+/*contact menu CSS */
+.contactNav {
+    height: 100%; /* 100% Full-height */
+    width: 300px; /* 50 width - change this with JavaScript */
+    position: fixed; /* Stay in place */
+    z-index: 1; /* Stay in front */
+    top: 0; /* Stay at the top */
+    right: -300px; /* Stay left */
+    background-color: #15313C; /* Rainy Blue */
+    overflow-x: hidden; /* Disable horizontal scroll */
+    overflow: hidden; /* Allow overflow offscreen */
+    padding-top: 60px; /* Place content 60px from the top */
+    transition: 0.5s; /* 0.5 second transition effect to slide in the sidenav */
+}
+
+/* The contact menu links */
+.contactNav a {
+    padding: 8px 8px 8px 32px;
+    text-decoration: none;
+    font-size: 16px;
+    color: #D5A47E;
+    display: block;
+    transition: 0.3s;
+}
+
+/* When you mouse over the navigation links, change their color */
+.contactNav a:hover {
+    color: #EEFAB5;
+}
+
+/* Position and style the close button (top left corner) */
+.contactNav .closebtn {
+    position: absolute;
+    top: 0;
+    left: 0;
+    font-size: 36px;
+    margin-right: 50px;
+}
+
+/*login menu CSS */
+.login {
+    height: 300px; /* 100% Full-height */
+    width: 300px; /* 50 width - change this with JavaScript */
+    position: fixed; /* Stay in place */
+    z-index: 1; /* Stay in front */
+    left: 20vw; /* Stay left */
+    background-color: #15313C; /* Rainy Blue */
+    overflow-x: hidden; /* Disable horizontal scroll */
+    overflow: hidden; /* Allow overflow offscreen */
+    padding-top: 60px; /* Place content 60px from the top */
+    transition: 0.5s; /* 0.5 second transition effect to slide in the sidenav */
+
+    text-align: center;
+    padding: 20px 0;
+    margin: 0px auto 0px auto;
+}
+
+/* The contact menu links */
+.login #loginx {
+    padding: 8px 8px 8px 32px;
+    text-decoration: none;
+    font-size: 25px;
+    color: #D5A47E;
+    display: block;
+    transition: 0.3s;
+}
+
+/* Position and style the close button (top left corner) */
+.login .closebtn {
+    position: absolute;
+    top: 0;
+    right: 10px;
+    font-size: 36px;
+}
+
+#loginImage {
+	margin: 0px auto 0px auto;
+	height: 256px;
+	width: 256px;
+}
+
+/* Style page content - use this if you want to push the page content to the right when you open the side navigation */
+#wrapper {
+    transition: 0.5s;
+    margin-left: 50px;
+}
