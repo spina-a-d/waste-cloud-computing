@@ -87,7 +87,6 @@ while [ true ]; do
 	    res=$?
 
 		if test "$res" != "0"; then
-		   echo "the curl command failed with: $res"
 		   let "fail++"
 		else
 			#delete lines of data already transfered
@@ -106,16 +105,20 @@ while [ true ]; do
     diskSize=$(df --output=size -B 1 "$PWD" |tail -n 1)
     diskUsed=$(df --output=used -B 1 "$PWD" |tail -n 1)
     DISK=$(awk "BEGIN {printf \"%.2f\",${diskUsed}/${diskSize}*100}")
-    CPU=$(CPU_usage)
+    CPU_usage
+    CPU=$?
+
     echo "$CPU"
+    echo "$MEMORY"
+    echo "$DISK"
+
 	#This is where new data will be extracted and sent
-	newData='{"cpu":"$CPU", "mem":"$MEMORY", "disk: $DISK"}'
+	newData='{"cpu":"'$CPU'", "mem":"'$MEMORY'", "disk":"'$DISK'"}'
 
 	send_data "$newData"
 	res=$?
 
 	if test "$res" != "0"; then
-	   echo "the curl command failed with: $res"
 	   echo $newData >> "tempStorage.json"
 	fi
 	:
