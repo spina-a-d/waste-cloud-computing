@@ -1,0 +1,33 @@
+#START SERVER EC2
+pm2 start npm -- start
+
+#NETWORK CAPTURE
+
+Capture inbound packets `sudo tcpdump "dst port <server port>"`
+Capture outbound packets `sudo tcpdump "src port <server port>"`
+output to > "data.dump"
+
+#WHAT IF PORTS ARE THE SAME?
+
+Capture inbound packets `sudo tcpdump "dst host <host ip>" and "dst port <server port>"`
+Capture outbound packets `sudo tcpdump "src host <host ip>" and "src port <server port>"`
+
+#If we can have the host ip configured somehow.
+
+#Need to be concerned about packets with < 64 bytes length because they might be padded in a TCP transfer and #also whether header/footer bytes are included in length.  Also length 0 is ACK but might actually have bytes #to it. Finally how to extract and send total packets sent.
+
+#Maybe capture 1 second, sum, return packet length sum to probe, probe sends and capture continues.  Need to #find a way that no packets are missed.
+
+tcpdump -v -r tcpdump-raw.dump tcp | grep "length:" |grep -v "^[^0-9]" | sed s/.*length:// | cut -d')' -f 1 | awk '{sum+=$1; print sum}'
+
+sudo tcpdump -s 1600 > dump file might be needed to capture all headers as well
+
+#Have tcpdump constantly dump to file
+Capture inbound packets `sudo tcpdump -s "dst host <host ip>" and "dst port <server port>" > inboundDump.txt &`
+Capture outbound packets `sudo tcpdump -s "src host <host ip>" and "src port <server port>" > outboundDump.txt &`
+
+#When the probe needs the total number of packets
+sudo sed -e 's/.*length //' <inbound | outbound>Dump.txt | awk '{ SUM += $1} END { print SUM }'
+
+#CPU CAPTURE
+#Do I need current utilization or just to report average since probe spawn?  Average is easier because it can be reported at any time and doesn't need to wait to take differences and might be all we need to report waste.

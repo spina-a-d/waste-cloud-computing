@@ -1,3 +1,12 @@
+/*defining colours*/
+:root {
+    --dark-heavy: #071e22;
+    --dark-medium: #1d7874;
+    --dark-soft: #679289;
+    --complement: #c44536;
+    --light: #f4c095;
+}
+
 #myLoginBar {
 	top: -300px;
 }
@@ -13,7 +22,7 @@
     position: fixed; /* Stay in place */
     z-index: 1; /* Stay in front */
     top: 0; /* Stay at the top */
-    background-color: #15313C; /* Rainy Blue */
+    background-color: var(--dark-heavy);
     overflow-x: hidden; /* Disable horizontal scroll */
     overflow: hidden; /* Allow overflow offscreen */
     padding-top: 100px; /* Place content 80px from the top */
@@ -25,14 +34,14 @@
     padding: 8px 8px 8px 32px;
     text-decoration: none;
     font-size: 25px;
-    color: #D5A47E;
+    color: var(--complement);
     display: block;
     transition: 0.3s;
 }
 
 /* When you mouse over the navigation links, change their color */
 .sidenav a:hover {
-    color: #EEFAB5;
+    color: var(--light);;
 }
 
 /* Position and style the close button (top right corner) */
@@ -40,19 +49,19 @@
 	padding: 8px 8px 8px 32px;
     text-decoration: none;
     font-size: 25px;
-    color: #D5A47E;
+    color: var(--complement);
     display: block;
     transition: 0.3s;
 }
 
 /* When you mouse over the navigation links, change their color */
 .sidenav #sidebar-menu-toggle:hover {
-	color: #EEFAB5;
+	color: var(--light);
 }
  
 /* Position and style the close button (top right corner) */
 .sidenav #menu-toggle {
-	color: #D5A47E;
+	color: var(--complement);
     position: absolute;
     top: 30px;
     right: -20px;
@@ -71,7 +80,7 @@
     z-index: 1; /* Stay in front */
     top: 0; /* Stay at the top */
     right: -300px; /* Stay left */
-    background-color: #15313C; /* Rainy Blue */
+    background-color: var(--dark-heavy); /* Rainy Blue */
     overflow-x: hidden; /* Disable horizontal scroll */
     overflow: hidden; /* Allow overflow offscreen */
     padding-top: 60px; /* Place content 60px from the top */
@@ -83,14 +92,14 @@
     padding: 8px 8px 8px 32px;
     text-decoration: none;
     font-size: 16px;
-    color: #D5A47E;
+    color: var(--complement);
     display: block;
     transition: 0.3s;
 }
 
 /* When you mouse over the navigation links, change their color */
 .contactNav a:hover {
-    color: #EEFAB5;
+    color: var(--light);
 }
 
 /* Position and style the close button (top left corner) */
@@ -109,7 +118,7 @@
     position: fixed; /* Stay in place */
     z-index: 1; /* Stay in front */
     left: 20vw; /* Stay left */
-    background-color: #15313C; /* Rainy Blue */
+    background-color: var(--dark-heavy); /* Rainy Blue */
     overflow-x: hidden; /* Disable horizontal scroll */
     overflow: hidden; /* Allow overflow offscreen */
     padding-top: 60px; /* Place content 60px from the top */
@@ -125,7 +134,7 @@
     padding: 8px 8px 8px 32px;
     text-decoration: none;
     font-size: 25px;
-    color: #D5A47E;
+    color: var(--complement);
     display: block;
     transition: 0.3s;
 }
