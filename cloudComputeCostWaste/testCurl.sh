@@ -1,12 +1,18 @@
 #!/bin/bash
+##CONFIG##
+APP_TOKEN="app_token" #Token provided which uniquelly identifies application
+IMAGE_TOKEN="image_token" #Token provided which uniquelly identifies image
+PORT=3000 #Port on which app traffic takes place
+PING_RATE=2 #how long between probe pings (use at least 1)
 
-#set number of CPUs to check for
+
 function CPU_usage(){
 	TOTAL_CPU_USAGE=0
-	TOTAL_CPU=$(grep -c ^processor /proc/cpuinfo)
+	TOTAL_CPU=$(grep -c ^processor /proc/cpuinfo) #set number of CPUs to check for
 	declare -a 'range=({'"0..$TOTAL_CPU"'})'
 	let "TOTAL_CPU=$TOTAL_CPU - 1"
 
+	#declare array of size TOTAL_CPU to store values (eg. 8 cpus makes arrays of size 8)
 	declare -a PREV_TOTAL=( $(for i in ${range[@]}; do echo 0; done) )
 	declare -a PREV_IDLE=( $(for i in ${range[@]}; do echo 0; done) )
 
@@ -57,7 +63,8 @@ function CPU_usage(){
 	    done
 	    let "SUM=$SUM/($TOTAL_CPU+1)"
 	    let "TOTAL_CPU_USAGE=$TOTAL_CPU_USAGE+$SUM"
-	    sleep 1
+	    let "SLEEP_TIME=($1-1)/3"
+	    sleep "$SLEEP_TIME"
 	done  
 	return $TOTAL_CPU_USAGE
 }
@@ -76,7 +83,7 @@ function send_data (){
 while [ true ]; do
 	sleep 1
 	filename="tempStorage.json"
-	echo "Reading from Storage:"
+	echo "Reading from Storage:" #Cleanup old data that wasn't sent
 	fail=0
 	lineNumber=1
 	while read -r line
@@ -96,24 +103,20 @@ while [ true ]; do
 	done < "$filename"
 	#Clear the deleted lines at the end
 	sed -i '/^\s*$/d' "$filename"
-
 	echo "$fail transfers failed."
 
+	#Gather new data
 	memFree=$(awk '/MemFree/ {printf( "%f\n", $2)}' /proc/meminfo)
     memTotal=$(awk '/MemTotal/ {printf( "%f\n", $2 )}' /proc/meminfo)
     MEMORY=$(awk "BEGIN {printf \"%.2f\",(${memTotal}-${memFree})/${memTotal}*100}")
     diskSize=$(df --output=size -B 1 "$PWD" |tail -n 1)
     diskUsed=$(df --output=used -B 1 "$PWD" |tail -n 1)
     DISK=$(awk "BEGIN {printf \"%.2f\",${diskUsed}/${diskSize}*100}")
-    CPU_usage
+    CPU_usage "$PING_RATE"
     CPU=$?
 
-    echo "$CPU"
-    echo "$MEMORY"
-    echo "$DISK"
-
 	#This is where new data will be extracted and sent
-	newData='{"cpu":"'$CPU'", "mem":"'$MEMORY'", "disk":"'$DISK'"}'
+	newData='{"app":"'$APP_TOKEN'", "image":"'$IMAGE_TOKEN'", "cpu":"'$CPU'", "mem":"'$MEMORY'", "disk":"'$DISK'"}'
 
 	send_data "$newData"
 	res=$?
