@@ -1,11 +1,12 @@
 var express = require('express');
 var router = express.Router();
-var User = require('../models/user');
+var Data = require('../models/data');
 
 /* Post probe data */
 router.post('/', function(req, res, next) {
-	User.addData(req, function (err, user) {
-        if (!user) {
+	console.log("post");
+	Data.addData(req, res, function (err, data) {
+        if (!data) {
             res.send("FAIL\n")
         } else if (err) {
             res.send("FAIL\n");

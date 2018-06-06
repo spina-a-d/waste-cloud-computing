@@ -37,13 +37,28 @@
 				    	<p> Your Applications : </p>
 				    	<ul>
 				    		<% for(var i = 0; i < renderPackage.applications.length; ++i) {%>
-				    			<div class="form-group">
-	                                <li> 
-	                                	<%-renderPackage.applications[i].name%> :
-	                                	<button type="submit" class="btn btn-primary">Delete</button>
-	                                </li>
-	                            </div>
-                            <% } %>
+				    			<form method="post">
+					    			<div class="form-group">
+		                                <li> 
+		                                	<%-renderPackage.applications[i].name%> : <%-renderPackage.applications[i]._id%>
+		                                	<input type="submit" name="<%-renderPackage.applications[i].name%>" value="Delete" />
+		                                </li>
+		                            </div>
+		                        </form>
+                        	<% } %>
+                        <ul>
+                    		<% for(var j = 0; j < renderPackage.applications[i].images.length; ++j) {%>
+	                    		<form method="post">
+					    			<div class="form-group">
+		                                <li> 
+		                                	<%-renderPackage.applications[i].images[j].name%> : <%-renderPackage.applications[i].images[j]._id%>
+		                                	<input type="submit" name="<%-renderPackage.applications[i].images[j].name%>" value="Delete" />
+		                                </li>
+		                            </div>
+	                        	</form>
+	                    	<% } %>
+                    	</ul>
+                            
                         </ul>
 				    </div>
 				</div>					

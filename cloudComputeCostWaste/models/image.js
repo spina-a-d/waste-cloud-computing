@@ -3,7 +3,7 @@ var  App = mongoose.model('App')
 
 // User Schema
 var ImageSchema = mongoose.Schema({
-	application: {type: mongoose.Schema.Types.ObjectId, ref: 'App'},
+	_creator: {type: mongoose.Schema.Types.ObjectId, ref: 'App'},
 	name: String
 });
 
@@ -19,7 +19,7 @@ module.exports.addData = function (req, callback)
 	        console.log("App wasn't found");
 	    } else {
 	        var image = new Image({
-				app: appRef,
+				_creator: appRef,
 				name: req.body.name
 			});
 	        image.save(function(err) {

@@ -4,6 +4,7 @@ var router = express.Router();
 
 var User = require('../models/user');
 var App = require('../models/app');
+var Image = require('../models/image');
 const checkAuthentication = require('../utilities/auth');
 
 /* GET profile page. */
@@ -27,24 +28,39 @@ router.post('/', function(req, res, next) {
   or a redirect if code does not exist */
 function displayProfile(req, res) {
     App.find({_creator: req.user._id})
-		.populate('_id')
 		.exec(function(err, applications) {
-        if (!applications) {
-            res.redirect('/');
-        } else if (err) {
+        if (err) {
             res.redirect('/');
         } else {
-        	console.log(applications);
-        	renderPackage = {
-        		name: req.user.name,
-        		oauthID: req.user.oauthID,
-        		applications: applications
+        	appPackage = [];
+        	for(var i = 0; i < applications.length; ++i) {
+        		var promise = queryImages(req);
+        		promise.then(function(images){
+        			console.log(applications[i]._id);
+        			appPackage.push({
+        				_id: applications[i]._id,
+        				name: applications[i].name,
+        				images: images
+        			});
+				}).catch(function(error){
+				   console.log(error);
+				});
         	}
-            res.render('profile', {
-                renderPackage: renderPackage
-            });
+	    	renderPackage = {
+	    		name: req.user.name,
+	    		oauthID: req.user.oauthID,
+	    		applications: appPackage
+	    	}
+	        res.render('profile', {
+	            renderPackage: renderPackage
+	        });
         }
     });
+}
+
+function queryImages(req){
+	var promise = Image.find({_creator: req.body.id}).exec();
+	return promise;
 }
 
 module.exports = router;

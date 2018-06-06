@@ -7,14 +7,17 @@ var DataSchema = mongoose.Schema({
 	uuid: String, 
 	cpu: Number, 
 	mem: Number, 
-	disk: Number
+	disk: Number,
+	time: Number
 });
 
 var Data = module.exports = mongoose.model('Data', DataSchema);
 
-module.exports.addData = function (req, callback)
+module.exports.addData = function (req, res, done)
 {
-	Image.findOne({ _id: req.body.imageID }, function(err, imageRef) {
+	var id = mongoose.Types.ObjectId(req.body.image);
+	Image.findOne({ _id: id }, function(err, imageRef) {
+		console.log("received");
 	    if(err) {
 	        console.log(err);  // handle errors!
 	    }
@@ -26,7 +29,8 @@ module.exports.addData = function (req, callback)
 				uuid: req.body.uuid, 
 				cpu: req.body.cpu, 
 				mem: req.body.mem, 
-				disk: req.body.disk
+				disk: req.body.disk,
+				time: req.body.time
 			});
 	        data.save(function(err) {
 	            if(err) {
