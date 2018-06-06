@@ -1,5 +1,6 @@
 #!/bin/bash
 ##CONFIG##
+USER_ID="22002433"
 APP_TOKEN="app_token" #Token provided which uniquelly identifies application
 IMAGE_TOKEN="image_token" #Token provided which uniquelly identifies image
 PORT=3000 #Port on which app traffic takes place
@@ -114,9 +115,10 @@ while [ true ]; do
     DISK=$(awk "BEGIN {printf \"%.2f\",${diskUsed}/${diskSize}*100}")
     CPU_usage "$PING_RATE"
     CPU=$?
+    UUID=$(dmidecode | grep -i uuid | awk '{print $2}' | tr '[:upper:]' '[:lower:]')
 
 	#This is where new data will be extracted and sent
-	newData='{"app":"'$APP_TOKEN'", "image":"'$IMAGE_TOKEN'", "cpu":"'$CPU'", "mem":"'$MEMORY'", "disk":"'$DISK'"}'
+	newData='{"oauthid": "'$USER_ID'", "app":"'$APP_TOKEN'", "image":"'$IMAGE_TOKEN'",  "uuid":"'$UUID'", "cpu":"'$CPU'", "mem":"'$MEMORY'", "disk":"'$DISK'"}'
 
 	send_data "$newData"
 	res=$?

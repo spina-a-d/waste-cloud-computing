@@ -39,23 +39,6 @@ module.exports = function(app) {
         }
     ));
 
-    // test authentication
-    function ensureAuthenticated(req, res, next) {
-        if (req.isAuthenticated()) { return next(); }
-        console.log("Not Authenticated", req.user);
-        res.redirect('/');
-    }
-
-    app.get('/testAuth', ensureAuthenticated, function(req, res){
-        User.findById(req.session.passport.user, function(err, user) {
-            if(err) {
-                console.log(err);  // handle errors
-            } else {
-                res.redirect('/viewData');
-            }
-        });
-    });
-
     //auth pages
     app.get('/auth/github',
         passport.authenticate('github'),
@@ -63,17 +46,15 @@ module.exports = function(app) {
     app.get('/auth/github/callback',
         passport.authenticate('github', { failureRedirect: '/' }),
         function(req, res) {
-            res.redirect('/testAuth');
+            res.redirect('/viewProfile');
         });
 
     // serialize and deserialize for session
     passport.serializeUser(function(user, done) {
-        console.log('serializeUser: ' + user);
         done(null, user._id);
     });
     passport.deserializeUser(function(id, done) {
         User.findById(id, function(err, user){
-            console.log('deserializeUser: ' + user);
             if(!err) done(null, user);
             else done(err, null);
         });

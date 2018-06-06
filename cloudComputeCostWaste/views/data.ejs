@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<% include templates/head.ejs %>
+<head>
+	<link rel="stylesheet" href="/stylesheets/index.css">
+</head>
+<script>
+        var renderPackage = <%- JSON.stringify(renderPackage) %>;
+</script>
+<html lang="en">
+	<% include templates/sidebars.ejs %>
+    <!-- Use any element to open the sidenav -->
+		
+	<!-- Add all page content inside this div if you want the side nav to push page content to the right (not used if you only want the sidenav to sit on top of the page -->
+	<div id="wrapper">
+		<div id = "page-content-wrapper">
+            <div class="container-fluid">
+            	<div class="row">
+				    <div id="intro-column" class="col-sm">
+				    	<h1> <%- renderPackage[0].name%> </h1>
+				    </div>
+				</div>
+				<div class="row">
+				    <div id="welcome-column" class="col-sm">
+				    	<h2> Your Data: </h2>
+				    </div>
+				    <div id="info-column" class="col-sm">
+				    	<p>Data: CPU, MEM, DISK </p>
+				    	<ul>
+				    		<% for(var i = 0; i < renderPackage[0].data.length; ++i) {%>
+                                <li> 
+                                	<%-renderPackage[0].data[i].cpu%>% 
+                                	<%-renderPackage[0].data[i].mem%>% 
+                                	<%-renderPackage[0].data[i].disk%>% 
+                                </li>
+                            <% } %>
+                        </ul>
+				    </div>
+				</div>					
+			</div>
+		</div>
+	</div>
+</html>

@@ -1,15 +1,18 @@
 var express = require('express');
 var router = express.Router();
+var User = require('../models/user');
 
-/* GET home page. */
-router.get('/', function(req, res, next) {
-	res.render('index', { title: 'Express' });
-});
-
-/* GET home page. */
+/* Post probe data */
 router.post('/', function(req, res, next) {
-	console.log(req.body);
-	res.send("ACK\n");
+	User.addData(req, function (err, user) {
+        if (!user) {
+            res.send("FAIL\n")
+        } else if (err) {
+            res.send("FAIL\n");
+        } else {
+        	res.send("ACK\n")
+        }
+    });
 });
 
 module.exports = router;

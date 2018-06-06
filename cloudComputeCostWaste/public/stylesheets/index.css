@@ -15,6 +15,10 @@ h2 {
 	font-family: 'Oxygen Mono', monospace;
 }
 
+h3{
+  font-family: 'Oxygen Mono', monospace;
+}
+
 /*colouring columns*/
 #intro-column {
 	padding: 40px;

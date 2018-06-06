@@ -16,7 +16,7 @@ var app = express();
 //routes
 var index = require('./routes/index');
 var api = require('./routes/api');
-var registerApp = require('./routes/registerApp');
+var viewProfile = require('./routes/viewProfile');
 var viewData = require('./routes/viewData');
 var downloadProbe = require('./routes/downloadProbe');
 var probePost = require('./routes/probePost');
@@ -42,7 +42,7 @@ passportConfig(app);
 
 app.use('/', index);
 app.use('/api', api);
-app.use('/registerApp', registerApp);
+app.use('/viewProfile', viewProfile);
 app.use('/viewData', viewData);
 app.use('/downloadProbe', downloadProbe);
 app.use('/probePost', probePost);
