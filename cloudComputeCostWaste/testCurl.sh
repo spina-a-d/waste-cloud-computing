@@ -116,7 +116,7 @@ while [ true ]; do
     CPU_usage "$PING_RATE"
     CPU=$?
     UUID=$(dmidecode | grep -i uuid | awk '{print $2}' | tr '[:upper:]' '[:lower:]')
-    TIME=$(date +%Y%m%d%H%M%S)
+    TIME=$(date +%s)
 
 	#This is where new data will be extracted and sent
 	newData='{"oauthid": "'$USER_ID'", "app":"'$APP_TOKEN'", "image":"'$IMAGE_TOKEN'",  "uuid":"'$UUID'", "cpu":"'$CPU'", "mem":"'$MEMORY'", "disk":"'$DISK'", "time":"'$TIME'"}'

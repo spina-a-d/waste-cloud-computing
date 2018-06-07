@@ -43,3 +43,10 @@ module.exports.addData = function (req, res, done)
 	    }
 	});
 };
+
+module.exports.getDataByImage = function (code, callback)
+{
+	var id = mongoose.Types.ObjectId(code);
+	console.log("Searching for images by user");
+	Data.find({ image: id }, callback);
+};

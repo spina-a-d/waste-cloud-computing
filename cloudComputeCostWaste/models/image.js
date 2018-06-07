@@ -1,9 +1,11 @@
 var mongoose = require('mongoose');
-var  App = mongoose.model('App') 
+var App = mongoose.model('App') 
+var User = mongoose.model('User') 
 
 // User Schema
 var ImageSchema = mongoose.Schema({
-	_creator: {type: mongoose.Schema.Types.ObjectId, ref: 'App'},
+	_creator: {type: mongoose.Schema.Types.ObjectId, ref: 'User'},
+	_app: {type: mongoose.Schema.Types.ObjectId, ref: 'App'},
 	name: String
 });
 
@@ -32,4 +34,11 @@ module.exports.addData = function (req, callback)
 	        });
 	    }
 	});
+};
+
+module.exports.getImagesByUser = function (code, callback)
+{
+	var id = mongoose.Types.ObjectId(code);
+	console.log("Searching for images by user");
+	Image.find({ _creator: code }, callback);
 };

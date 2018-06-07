@@ -32,35 +32,64 @@ function displayProfile(req, res) {
         if (err) {
             res.redirect('/');
         } else {
-        	appPackage = [];
-        	for(var i = 0; i < applications.length; ++i) {
-        		var promise = queryImages(req);
-        		promise.then(function(images){
-        			console.log(applications[i]._id);
-        			appPackage.push({
-        				_id: applications[i]._id,
-        				name: applications[i].name,
-        				images: images
-        			});
-				}).catch(function(error){
-				   console.log(error);
-				});
-        	}
-	    	renderPackage = {
-	    		name: req.user.name,
-	    		oauthID: req.user.oauthID,
-	    		applications: appPackage
-	    	}
-	        res.render('profile', {
-	            renderPackage: renderPackage
-	        });
+        	console.log("creating package");
+        	var rendPackage = null;
+        	createPackage(req, applications, rendPackage, function(){
+        		console.log("rendering");
+        		res.render('profile', {
+	            	renderPackage: rendPackage
+	       		});
+        	})
         }
     });
 }
 
+//ensures images are queried synchronously
 function queryImages(req){
 	var promise = Image.find({_creator: req.body.id}).exec();
 	return promise;
 }
 
+//ensures package is created synchronously
+function createPackage(req, applications, rendPackage, callback){
+	appPackage = [];
+	console.log("looping over apps");
+	loopPackets(req, applications, appPackage, function(){
+		console.log("appPackage created");
+		rendPackage = {
+			name: req.user.name,
+			oauthID: req.user.oauthID,
+			applications: appPackage
+		}
+	});
+}
+
+function loopPackets(req, applications, callback){
+	for(var i = 0; i < applications.length; ++i) {
+		var package = null;
+		createPacket(queryImages(req), applications[i], package, function() {
+			console.log("packet pushed");
+			appPackage.push(package);
+		});	
+	}
+}
+
+//ensures packet is created synchronously
+function createPacket(promise, app, package, callback){
+	promise.then(function(images){
+		package = {
+			_id: app._id,
+			name: app.name,
+			images: images
+		};
+		console.log("package " + package + " created");
+	}).catch(function(error){
+		package = {
+			_id: "error",
+			name: "error",
+			images: ["error"]
+		};
+	    console.log(error);
+	});
+}
 module.exports = router;

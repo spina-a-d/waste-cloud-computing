@@ -4,7 +4,7 @@
 	<link rel="stylesheet" href="/stylesheets/index.css">
 </head>
 <script>
-        var renderPackage = <%- JSON.stringify(renderPackage) %>;
+        var dataPackage = <%- JSON.stringify(dataPackage) %>;
 </script>
 <html lang="en">
 	<% include templates/sidebars.ejs %>
@@ -14,27 +14,26 @@
 	<div id="wrapper">
 		<div id = "page-content-wrapper">
             <div class="container-fluid">
-            	<div class="row">
-				    <div id="intro-column" class="col-sm">
-				    	<h1> <%- renderPackage[0].name%> </h1>
-				    </div>
-				</div>
 				<div class="row">
-				    <div id="welcome-column" class="col-sm">
-				    	<h2> Your Data: </h2>
-				    </div>
-				    <div id="info-column" class="col-sm">
-				    	<p>Data: CPU, MEM, DISK </p>
-				    	<ul>
-				    		<% for(var i = 0; i < renderPackage[0].data.length; ++i) {%>
-                                <li> 
-                                	<%-renderPackage[0].data[i].cpu%>% 
-                                	<%-renderPackage[0].data[i].mem%>% 
-                                	<%-renderPackage[0].data[i].disk%>% 
-                                </li>
-                            <% } %>
-                        </ul>
-				    </div>
+					<% for(var i = 0; i < dataPackage.length; ++i) {%>
+						<div id="info-column" class="col-sm">
+							<h4> <%- dataPackage[i].imageName %> </h4>
+							<% for(var j = 0; j < dataPackage[i].uuidList.length; ++j) {%>
+					    		<ul>
+					    			<p> <%- dataPackage[i].uuidList[j].uuid %> <p>
+					    			<h6>CPU, MEM, DISK, TIME </h6>
+					    			<% for(var k = 0; k < dataPackage[i].uuidList[j].data.length; ++k) {%>
+		                            <li> 
+		                            	<%-dataPackage[i].uuidList[j].data[k].cpu%>% 
+		                            	<%-dataPackage[i].uuidList[j].data[k].mem%>% 
+		                            	<%-dataPackage[i].uuidList[j].data[k].disk%>%
+		                            	<%-dataPackage[i].uuidList[j].data[k].time%>
+		                            </li>
+		                            <% } %>
+		                    	</ul>
+	                    	<% } %>
+					    </div>
+					<% } %>
 				</div>					
 			</div>
 		</div>
