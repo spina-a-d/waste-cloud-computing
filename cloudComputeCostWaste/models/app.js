@@ -9,9 +9,9 @@ var AppSchema = mongoose.Schema({
 
 var App = module.exports = mongoose.model('App', AppSchema);
 
-module.exports.addData = function (req, res, done)
+module.exports.addData = function (name, user, done)
 {
-	User.findOne({ _id: req.user._id }, function(err, userRef) {
+	User.findOne({ _id: user }, function(err, userRef) {
 	    if(err) {
 	        console.log(err);  // handle errors!
 	    }
@@ -20,7 +20,7 @@ module.exports.addData = function (req, res, done)
 	    } else {
 	        var app = new App({
 				_creator: userRef._id,
-				name: req.body.name
+				name: name
 			});
 	        app.save(function(err) {
 	            if(err) {
@@ -33,3 +33,10 @@ module.exports.addData = function (req, res, done)
 	    }
 	});
 }
+
+module.exports.delete = function (id, callback)
+{
+	var id = mongoose.Types.ObjectId(id);
+	console.log("Searching for id of app to delete");
+	App.findOneAndRemove({ _id: id }, callback);
+};

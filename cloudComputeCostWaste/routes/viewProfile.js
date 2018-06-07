@@ -14,14 +14,73 @@ router.get('/', checkAuthentication, function(req, res, next) {
 
 /* Add App Post */
 router.post('/', function(req, res, next) {
-	App.addData(req, res, function (err) {
-		if (err) {
-            console.log(err);
-        } else {
-        	res.redirect('/viewProfile');
-        }
-    });
+	let action_path = String(req.body.action).split(".");
+	console.log(action_path);
+	switch(action_path[0]) {
+	    case "app":
+	        switch(action_path[1]) {
+			    case "create":
+			        console.log("creating " + req.body.name_app);
+			        //create application with name_app
+			        App.addData(req.body.name_app, req.user._id, function (err) {
+						if (err) {
+				            console.log(err);
+				        } else {
+				        	res.redirect('/viewProfile');
+				        }
+			        });
+			        break;
+			    case "delete":
+			        console.log("deleting " + action_path[2]);
+			        App.delete(action_path[2], function (err) {
+						if (err) {
+				            console.log(err);
+				        } else {
+				        	res.redirect('/viewProfile');
+				        }
+			        });
+			        break;
+			    default:
+			    	console.log("Error: action_path invalid");
+			        break
+			}
+	        break;
+	    case "image":
+	        switch(action_path[1]) {
+			    case "create":
+			    	let id = "name" + action_path[2];
+			        console.log("creating " + req.body[id]);
+			       	Image.addData(req.body[id], action_path[2], req.user._id, function (err) {
+						if (err) {
+				            console.log(err);
+				        } else {
+				        	res.redirect('/viewProfile');
+				        }
+			        });
+			        break;
+			    case "delete":
+			        console.log("deleting " + action_path[2]);
+			        Image.delete(action_path[2], function (err) {
+						if (err) {
+				            console.log(err);
+				        } else {
+				        	res.redirect('/viewProfile');
+				        }
+			        });
+			        break;
+			    default:
+			    	console.log("Error: action_path invalid");
+			        break;
+			}
+	        break;
+	    default:
+	    	console.log("Error: action_path invalid");
+	        break;
+	} 
 	
+	/*
+	
+    */
 });
 
 /*Displays the profile of the user with code 'code',
@@ -45,8 +104,8 @@ function displayProfile(req, res) {
 }
 
 //ensures images are queried synchronously
-function queryImages(req){
-	var promise = Image.find({_app: req.body.id}).exec();
+function queryImages(app){
+	var promise = Image.find({_app: app._id}).exec();
 	return promise;
 }
 
@@ -68,11 +127,10 @@ function loopPackets(req, applications, callback){
 	let itemsProcessed = 0;
 	let appPackage = [];
 	for(let i = 0; i < applications.length; ++i) {
-		createPacket(queryImages(req), applications[i], function(package) {
+		createPacket(queryImages(applications[i]), applications[i], function(package) {
 			console.log("packet pushed");
 			appPackage.push(package);
 			++itemsProcessed;
-			console.log(itemsProcessed);
 			if(itemsProcessed == applications.length){
 				console.log("all items processed");
 	            callback(req, appPackage);
@@ -89,7 +147,6 @@ function createPacket(promise, app, callback){
 			name: app.name,
 			images: images
 		};
-		console.log("package " + package + " created");
 		callback(package);
 	}).catch(function(error){
 	    console.log(error);

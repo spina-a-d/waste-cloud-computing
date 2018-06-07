@@ -4,7 +4,12 @@
 	<link rel="stylesheet" href="/stylesheets/index.css">
 </head>
 <script>
-        var renderPackage = <%- JSON.stringify(renderPackage) %>;;
+        var renderPackage = <%- JSON.stringify(renderPackage) %>;
+        function submitForm(action) {
+		    var form = document.getElementById('form1');
+		    form.action = action;
+		    form.submit();
+		}
 </script>
 <html lang="en">
 	<% include templates/sidebars.ejs %>
@@ -23,17 +28,17 @@
 				    </div>
 				</div>
 				<div class="row">
-				    <div id="welcome-column" class="col-sm">
+				    <div id="welcome-column" class="col-sm-4">
 				    	<h2> Your Registered Applications: </h2>
 				    	<form method="post">
 						  	<div class="form-group">
 						    	<label for="name">New Application Name</label>
-						    	<input type="text" name="name" value="" />
+						    	<input type="text" name="name_app" value="" />
 						  	</div>
-						  	<button type="submit" class="btn btn-primary">Add an Application</button>
+						  	<button name="action" type="submit" value="app.create">Add New Application</button>
 						</form>
 				    </div>
-				    <div id="info-column" class="col-sm">
+				    <div id="info-column" class="col-sm-8">
 				    	<p> Your Applications : </p>
 				    	<ul>
 				    		<% for(var i = 0; i < renderPackage.applications.length; ++i) {%>
@@ -41,7 +46,9 @@
 					    			<div class="form-group">
 		                                <li> 
 		                                	<%-renderPackage.applications[i].name%> : <%-renderPackage.applications[i]._id%>
-		                                	<input type="submit" name="<%-renderPackage.applications[i].name%>" value="Delete" />
+		                                	<button name="action" type="submit" value="app.delete.<%-renderPackage.applications[i]._id%>">Delete</button>
+		                                	<button name="action" type="submit" value="image.create.<%-renderPackage.applications[i]._id%>">Add Image</button>
+		                                	<input type="text" name="name<%-renderPackage.applications[i]._id%>" value=""/>
 		                                </li>
 		                            </div>
 		                        </form>
@@ -51,7 +58,7 @@
 							    			<div class="form-group">
 				                                <li> 
 				                                	<%-renderPackage.applications[i].images[j].name%> : <%-renderPackage.applications[i].images[j]._id%>
-				                                	<input type="submit" name="<%-renderPackage.applications[i].images[j].name%>" value="Delete" />
+				                                	<button name="action" type="submit" value="image.delete.<%-renderPackage.applications[i].images[j]._id%>">Delete</button>
 				                                </li>
 				                            </div>
 			                        	</form>
