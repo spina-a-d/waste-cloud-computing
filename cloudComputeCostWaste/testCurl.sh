@@ -3,6 +3,7 @@
 USER_ID="5b1818145f2f3b51b3c5b0f4"
 APP_TOKEN="5b181a6d1f8c5b53d30905d4" #Token provided which uniquelly identifies application
 IMAGE_TOKEN="5b18317bcbbe06525f298444" #Token provided which uniquelly identifies image
+DESTINATION="localhost:3000"
 PORT=3000 #Port on which app traffic takes place
 PING_RATE=2 #how long between probe pings (use at least 1)
 
@@ -75,7 +76,7 @@ function send_data (){
 	  	--header 'Expect:' \
 	  	--request POST \
 	  	--data "$1" \
-	  	http://localhost:3000/probePost
+	  	"$DESTINATION/probePost"
 	res=$?
 	return $res
 }
