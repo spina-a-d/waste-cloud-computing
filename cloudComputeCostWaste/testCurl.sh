@@ -54,9 +54,9 @@ function CPU_usage(){
 	        done
 
 	        # Calculate the CPU usage since we last checked.
-	        let "DIFF_IDLE=${IDLE} - ${PREV_IDLE[$i]}"
-	        let "DIFF_TOTAL=${TOTAL} - ${PREV_TOTAL[$i]}"
-	        let "DIFF_USAGE=(1000 * ($DIFF_TOTAL - $DIFF_IDLE) / ($DIFF_TOTAL + 5)) / 10"
+	        let "DIFF_IDLE=$IDLE-${PREV_IDLE[$i]}"
+	        let "DIFF_TOTAL=$TOTAL-${PREV_TOTAL[$i]}"
+	        let "DIFF_USAGE=(1000*($DIFF_TOTAL-$DIFF_IDLE)/($DIFF_TOTAL+5))/10"
 	        let "SUM=$SUM+$DIFF_USAGE"
 
 	        # Remember the total and idle CPU times for the next check.
