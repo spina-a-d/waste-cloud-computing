@@ -3,7 +3,7 @@
 USER_ID="5b1818145f2f3b51b3c5b0f4"
 APP_TOKEN="5b181a6d1f8c5b53d30905d4" #Token provided which uniquelly identifies application
 IMAGE_TOKEN="5b18317bcbbe06525f298444" #Token provided which uniquelly identifies image
-DESTINATION="localhost:3000"
+DESTINATION="http://ec2-54-93-213-203.eu-central-1.compute.amazonaws.com:3000"
 PORT=3000 #Port on which app traffic takes place
 PING_RATE=2 #how long between probe pings (use at least 1)
 
@@ -54,8 +54,8 @@ function CPU_usage(){
 	        done
 
 	        # Calculate the CPU usage since we last checked.
-	        let "DIFF_IDLE=$IDLE-${PREV_IDLE[$i]}"
-	        let "DIFF_TOTAL=$TOTAL-${PREV_TOTAL[$i]}"
+	        let "DIFF_IDLE=${IDLE}-${PREV_IDLE[$i]}"
+	        let "DIFF_TOTAL=${TOTAL}-${PREV_TOTAL[$i]}"
 	        let "DIFF_USAGE=(1000*($DIFF_TOTAL-$DIFF_IDLE)/($DIFF_TOTAL+5))/10"
 	        let "SUM=$SUM+$DIFF_USAGE"
 
