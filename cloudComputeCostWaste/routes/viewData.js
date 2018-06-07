@@ -35,7 +35,7 @@ function getData(res, images){
             data.sort(compareTimes);
             let uuidList = [];
             ++itemsProcessed;
-            
+
             console.log("About to process data");
             for(let j = 0; j < data.length; ++j) {
                 let pos = uuidList.map(function(e) { return e.uuid; }).indexOf(data[j].uuid);
@@ -50,20 +50,24 @@ function getData(res, images){
                 else {
                     uuidList[pos].data.push(data[j]);
                 }
-                
             }
             //now sort the data into uuid buckets and also check which uuids are alive
             for(let i = 0; i < uuidList.length; ++i) {
                 let responseTime = 0;
                 for(let j = 0; j < uuidList[i].data.length; ++j) {
                     //check average response time
-                    responseTime += uuidList[i].data[j].time;   
+                    if(j != 0){
+                        responseTime += uuidList[i].data[j].time - uuidList[i].data[j - 1].time;   
+                    }
                 }
-                let avgResponseTime = responseTime / uuidList[i].data.length;
+                let avgResponseTime = Math.round(responseTime / (uuidList[i].data.length - 1));
                 if( uuidList[i].data[uuidList[i].data.length - 1] != null) {
                     //check that the last ping was not more than 2 times the average response time
                     // ago or its likely dead unless we find otherwise
-                    if(new Date().getSeconds() - data[data.length - 1] > 2 * avgResponseTime){
+                    console.log(Math.round((new Date()).getTime() / 1000));
+                    console.log(data[data.length - 1].time);
+                    console.log(2 * avgResponseTime);
+                    if(Math.round((new Date()).getTime() / 1000) - data[data.length - 1].time > 2 * avgResponseTime){
                         uuidList[i].alive = false;
                     }
                 }

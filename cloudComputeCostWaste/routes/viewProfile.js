@@ -33,9 +33,9 @@ function displayProfile(req, res) {
             res.redirect('/');
         } else {
         	console.log("creating package");
-        	var rendPackage = null;
-        	createPackage(req, applications, rendPackage, function(){
-        		console.log("rendering");
+        	[];
+        	createPackage(req, applications, function(rendPackage){
+        		console.log(rendPackage);
         		res.render('profile', {
 	            	renderPackage: rendPackage
 	       		});
@@ -46,49 +46,52 @@ function displayProfile(req, res) {
 
 //ensures images are queried synchronously
 function queryImages(req){
-	var promise = Image.find({_creator: req.body.id}).exec();
+	var promise = Image.find({_app: req.body.id}).exec();
 	return promise;
 }
 
 //ensures package is created synchronously
-function createPackage(req, applications, rendPackage, callback){
-	appPackage = [];
+function createPackage(req, applications, callback){
 	console.log("looping over apps");
-	loopPackets(req, applications, appPackage, function(){
+	loopPackets(req, applications, function(req, appPackage){
 		console.log("appPackage created");
-		rendPackage = {
+		let rendPackage = {
 			name: req.user.name,
 			oauthID: req.user.oauthID,
 			applications: appPackage
 		}
+		callback(rendPackage);
 	});
 }
 
 function loopPackets(req, applications, callback){
-	for(var i = 0; i < applications.length; ++i) {
-		var package = null;
-		createPacket(queryImages(req), applications[i], package, function() {
+	let itemsProcessed = 0;
+	let appPackage = [];
+	for(let i = 0; i < applications.length; ++i) {
+		createPacket(queryImages(req), applications[i], function(package) {
 			console.log("packet pushed");
 			appPackage.push(package);
+			++itemsProcessed;
+			console.log(itemsProcessed);
+			if(itemsProcessed == applications.length){
+				console.log("all items processed");
+	            callback(req, appPackage);
+	        }
 		});	
 	}
 }
 
 //ensures packet is created synchronously
-function createPacket(promise, app, package, callback){
+function createPacket(promise, app, callback){
 	promise.then(function(images){
-		package = {
+		let package = {
 			_id: app._id,
 			name: app.name,
 			images: images
 		};
 		console.log("package " + package + " created");
+		callback(package);
 	}).catch(function(error){
-		package = {
-			_id: "error",
-			name: "error",
-			images: ["error"]
-		};
 	    console.log(error);
 	});
 }

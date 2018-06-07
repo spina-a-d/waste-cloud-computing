@@ -4,7 +4,7 @@
 	<link rel="stylesheet" href="/stylesheets/index.css">
 </head>
 <script>
-        var renderPackage = <%- JSON.stringify(renderPackage) %>;
+        var renderPackage = <%- JSON.stringify(renderPackage) %>;;
 </script>
 <html lang="en">
 	<% include templates/sidebars.ejs %>
@@ -45,19 +45,19 @@
 		                                </li>
 		                            </div>
 		                        </form>
+		                        <ul>
+		                    		<% for(var j = 0; j < renderPackage.applications[i].images.length; ++j) {%>
+			                    		<form method="post">
+							    			<div class="form-group">
+				                                <li> 
+				                                	<%-renderPackage.applications[i].images[j].name%> : <%-renderPackage.applications[i].images[j]._id%>
+				                                	<input type="submit" name="<%-renderPackage.applications[i].images[j].name%>" value="Delete" />
+				                                </li>
+				                            </div>
+			                        	</form>
+			                    	<% } %>
+		                    	</ul>
                         	<% } %>
-                        <ul>
-                    		<% for(var j = 0; j < renderPackage.applications[i].images.length; ++j) {%>
-	                    		<form method="post">
-					    			<div class="form-group">
-		                                <li> 
-		                                	<%-renderPackage.applications[i].images[j].name%> : <%-renderPackage.applications[i].images[j]._id%>
-		                                	<input type="submit" name="<%-renderPackage.applications[i].images[j].name%>" value="Delete" />
-		                                </li>
-		                            </div>
-	                        	</form>
-	                    	<% } %>
-                    	</ul>
                             
                         </ul>
 				    </div>
