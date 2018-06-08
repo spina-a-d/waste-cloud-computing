@@ -1,9 +1,9 @@
 #!/bin/bash
 ##CONFIG##
 USER_ID="5b1818145f2f3b51b3c5b0f4"
-APP_TOKEN="5b181a6d1f8c5b53d30905d4" #Token provided which uniquelly identifies application
-IMAGE_TOKEN="5b18317bcbbe06525f298444" #Token provided which uniquelly identifies image
-DESTINATION="http://ec2-54-93-213-203.eu-central-1.compute.amazonaws.com:3000"
+APP_TOKEN="5b181b426caffc54498ec8c4" #Token provided which uniquelly identifies application
+IMAGE_TOKEN="5b19934dc10c6b06dd01e75c" #Token provided which uniquelly identifies image
+DESTINATION="localhost:3000"
 PORT=3000 #Port on which app traffic takes place
 PING_RATE=2 #how long between probe pings (use at least 1)
 

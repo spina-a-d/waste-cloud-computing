@@ -22,6 +22,7 @@
 					    		<ul>
 					    			<p> <%- dataPackage[i].uuidList[j].uuid %> <p>
 					    			<p> Alive? : <%- dataPackage[i].uuidList[j].alive %> <p>
+					    			<p>Total Uptime : <%- dataPackage[i].uuidList[j].uptime %> seconds <p>
 					    			<h6>CPU, MEM, DISK, TIME </h6>
 					    			<% for(var k = 0; k < dataPackage[i].uuidList[j].data.length; ++k) {%>
 		                            <li> 
