@@ -1,0 +1,71 @@
+/*TODO:: Define github logo with 'light'*/
+
+/*defining colours*/
+:root {
+	--dark-heavy: #071e22;
+	--dark-medium: #1d7874;
+	--dark-soft: #679289;
+	--complement: #c44536;
+	--light: #f4c095;
+}
+
+h2 {
+	padding-top: 60px;
+	padding-left: 20px;
+	font-family: 'Oxygen Mono', monospace;
+}
+
+h3{
+	font-family: 'Oxygen Mono', monospace;
+}
+
+/*colouring columns*/
+#intro-column {
+	padding: 40px;
+	background-color: var(--light);
+	color: var(--dark-heavy);
+	min-height: 20vh;
+}
+#welcome-column {
+	padding: 40px;
+	color: var(--dark-heavy);
+		background-color: var(--dark-medium);
+		min-height: 75vh;
+}
+#info-column {
+	font-family: 'Oxygen Mono', monospace;
+	color: var(--dark-heavy);
+	padding: 40px;
+	background-color: var(--complement);;
+	min-height: 75vh;
+}
+/*typewriter the intro*/
+.typewriter {
+	padding: 5%;
+}
+
+.typewriter h1 {
+	color: var(--dark-heavy);
+	font-size: 3vw;
+	font-family: 'Oxygen Mono', monospace;
+	overflow: hidden; /* Ensures the content is not revealed until the animation */
+	border-right: .15em solid orange; /* The typwriter cursor */
+	white-space: nowrap; /* Keeps the content on a single line */
+	margin: 0 auto; /* Gives that scrolling effect as the typing happens */
+	letter-spacing: .15em; /* Adjust as needed */
+	animation: 
+	typing 3.5s steps(30, end),
+	blink-caret .5s step-end infinite;
+}
+
+/* The typing effect */
+@keyframes typing {
+		from { width: 0 }
+		to { width: 100% }
+}
+
+/* The typewriter cursor effect */
+@keyframes blink-caret {
+		from, to { border-color: transparent }
+		50% { border-color: #color: var(--complement) }
+}

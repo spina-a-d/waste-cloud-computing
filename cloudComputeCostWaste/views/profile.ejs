@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <% include templates/head.ejs %>
 <head>
-	<link rel="stylesheet" href="/stylesheets/index.css">
+	<link rel="stylesheet" href="/stylesheets/viewProfile.css">
 </head>
 <script>
         var renderPackage = <%- JSON.stringify(renderPackage) %>;
@@ -29,7 +29,7 @@
 				</div>
 				<div class="row">
 				    <div id="welcome-column" class="col-sm-4">
-				    	<h2> Your Registered Applications: </h2>
+				    	<h2> Application Management </h2>
 				    	<form method="post">
 						  	<div class="form-group">
 						    	<label for="name">New Application Name</label>
@@ -39,7 +39,7 @@
 						</form>
 				    </div>
 				    <div id="info-column" class="col-sm-8">
-				    	<p> Your Applications : </p>
+				    	<h5> Your Applications : </h5>
 				    	<ul>
 				    		<% for(var i = 0; i < renderPackage.applications.length; ++i) {%>
 				    			<form method="post">
