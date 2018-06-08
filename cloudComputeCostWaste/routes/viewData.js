@@ -6,9 +6,8 @@ var Image = require('../models/image');
 var Data = require('../models/data');
 const checkAuthentication = require('../utilities/auth');
 
-
 /* GET home page. */
-router.get('/', function(req, res, next) {
+router.get('/', checkAuthentication, function(req, res, next) {
 	displayData(req, res);
 });
 
