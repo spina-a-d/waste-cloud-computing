@@ -2,6 +2,7 @@
 <% include templates/head.ejs %>
 <head>
 	<link rel="stylesheet" href="/stylesheets/index.css">
+	<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
 </head>
 <script>
         var dataPackage = <%- JSON.stringify(dataPackage) %>;
@@ -14,30 +15,96 @@
 	<div id="wrapper">
 		<div id = "page-content-wrapper">
             <div class="container-fluid">
-				<div class="row">
-					<% for(var i = 0; i < dataPackage.length; ++i) {%>
-						<div id="info-column" class="col-sm">
-							<h4> <%- dataPackage[i].imageName %> </h4>
-							<% for(var j = 0; j < dataPackage[i].uuidList.length; ++j) {%>
+            	<% for(var i = 0; i < dataPackage.length; ++i) {%>
+					<div class="row">
+						<% for(var j = 0; j < dataPackage[i].uuidList.length; ++j) {%>
+							<div id="info-column" class="col-sm">
+								<h4> <%- dataPackage[i].imageName %> </h4>
 					    		<ul>
 					    			<p> <%- dataPackage[i].uuidList[j].uuid %> <p>
 					    			<p> Alive? : <%- dataPackage[i].uuidList[j].alive %> <p>
 					    			<p>Total Uptime : <%- dataPackage[i].uuidList[j].uptime %> seconds <p>
-					    			<h6>CPU, MEM, DISK, TIME </h6>
-					    			<% for(var k = 0; k < dataPackage[i].uuidList[j].data.length; ++k) {%>
-		                            <li> 
-		                            	<%-dataPackage[i].uuidList[j].data[k].cpu%>% 
-		                            	<%-dataPackage[i].uuidList[j].data[k].mem%>% 
-		                            	<%-dataPackage[i].uuidList[j].data[k].disk%>%
-		                            	<%-dataPackage[i].uuidList[j].data[k].time%>
-		                            </li>
-		                            <% } %>
 		                    	</ul>
-	                    	<% } %>
-					    </div>
-					<% } %>
-				</div>					
+		                    	<div id="<%- dataPackage[i].uuidList[j].uuid %>" style="height:250px;"></div>
+		                    </div>
+                    	<% } %> 
+					</div>	
+				<% } %>
 			</div>
 		</div>
 	</div>
+	<script>
+		function toDateTime(secs) {
+		    var t = new Date(1970, 0, 1); // Epoch
+		    t.setSeconds(secs);
+		    return t;
+		}
+
+		for(var i = 0; i < dataPackage.length; ++i) {
+			for(var j = 0; j < dataPackage[i].uuidList.length; ++j) {
+				var data = [];
+				var TESTER = document.getElementById(dataPackage[i].uuidList[j].uuid);
+				var WIDTH = document.getElementById("info-column").clientwidth;
+				var x_axis = [];
+				var y_axis = [];
+				for(var k = 0; k < dataPackage[i].uuidList[j].data.length; ++k) {
+					x_axis.push(toDateTime(dataPackage[i].uuidList[j].data[k].time));
+					y_axis.push([
+						dataPackage[i].uuidList[j].data[k].cpu,
+						dataPackage[i].uuidList[j].data[k].mem,
+						dataPackage[i].uuidList[j].data[k].disk
+					]);
+				}
+				var scatterNames = ["CPU", "MEM", "DISK"];
+				for(var m = 0; m < scatterNames.length; ++m) {
+					var data_y_axis = [];
+					for(var n = 0; n < y_axis.length; ++n) {
+						console.log(y_axis[n][m]);
+						data_y_axis.push(y_axis[n][m]);
+					}
+					data.push({
+						x: x_axis,
+						y: data_y_axis,
+						name: scatterNames[m],
+						type: "scatter"
+					});
+				}
+				var layout = {
+					title: "Usage Statistics",
+					width: WIDTH,
+					yaxis: {
+					    title: "USAGE %",
+					    titlefont: {color: "#1f77b4"},
+					    tickfont: {color: "#1f77b4"}
+					},
+				  	yaxis2: {
+					    title: "MEM",
+					    titlefont: {color: "#ff7f0e"},
+					    tickfont: {color: "#ff7f0e"},
+					    anchor: "free",
+					    overlaying: "y",
+					    side: "left",
+					    position: 0.15
+				  	},
+				  	yaxis3: {
+					    title: "DISK",
+					    titlefont: {color: "#d62728"},
+					    tickfont: {color: "#d62728"},
+					    anchor: "x",
+					    overlaying: "y",
+					    side: "left",
+					    position: 0.85
+				  	},
+				  	margin: {
+					    l: 50,
+					    r: 50,
+					    b: 50,
+					    t: 50,
+					    pad: 4
+				  	}
+				};
+				Plotly.plot( TESTER, data, layout );
+			}
+		}
+	</script>
 </html>

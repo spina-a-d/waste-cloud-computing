@@ -67,6 +67,9 @@ module.exports.deleteFromImage = function (id, callback)
 		else{
 			console.log(datas);
 			let itemsProcessed = 0;
+			if(datas.length == 0) {
+				callback();
+			}
 			for(let i = 0; i < datas.length; ++i) {
 				Data.findOneAndRemove({ _id: datas[i]._id }, function(){
 					++itemsProcessed;

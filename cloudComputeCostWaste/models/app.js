@@ -49,6 +49,9 @@ module.exports.delete = function (id, callback)
 		}
 		let itemsProcessed = 0;
 		console.log(images);
+		if(images.length == 0) {
+			App.findOneAndRemove({ _id: id }, callback);
+		}
 		for(let i = 0; i < images.length; ++i) {
 			Image.delete(images[i]._id, function(){
 				++itemsProcessed;
