@@ -1,8 +1,8 @@
 #!/bin/bash
 ##CONFIG##
 USER_ID="5b1818145f2f3b51b3c5b0f4"
-APP_TOKEN="5b181b426caffc54498ec8c4" #Token provided which uniquelly identifies application
-IMAGE_TOKEN="5b19934dc10c6b06dd01e75c" #Token provided which uniquelly identifies image
+APP_TOKEN="5b1a8e06c1217271bd3c7ad9" #Token provided which uniquelly identifies application
+IMAGE_TOKEN="5b1a8e09c1217271bd3c7ada" #Token provided which uniquelly identifies image
 DESTINATION="localhost:3000"
 PORT=3000 #Port on which app traffic takes place
 PING_RATE=2 #how long between probe pings (use at least 1)

@@ -3,8 +3,10 @@ var path = require('path');
 var router = express.Router();
 
 var User = require('../models/user');
-var App = require('../models/app');
 var Image = require('../models/image');
+var App = require('../models/app');
+
+
 const checkAuthentication = require('../utilities/auth');
 
 /* GET profile page. */
@@ -77,10 +79,6 @@ router.post('/', function(req, res, next) {
 	    	console.log("Error: action_path invalid");
 	        break;
 	} 
-	
-	/*
-	
-    */
 });
 
 /*Displays the profile of the user with code 'code',
@@ -92,7 +90,6 @@ function displayProfile(req, res) {
             res.redirect('/');
         } else {
         	console.log("creating package");
-        	[];
         	createPackage(req, applications, function(rendPackage){
         		console.log(rendPackage);
         		res.render('profile', {
@@ -126,6 +123,10 @@ function createPackage(req, applications, callback){
 function loopPackets(req, applications, callback){
 	let itemsProcessed = 0;
 	let appPackage = [];
+	if(applications.length == 0) {
+		console.log("No applications, returning");
+		callback(req, appPackage);
+	}
 	for(let i = 0; i < applications.length; ++i) {
 		createPacket(queryImages(applications[i]), applications[i], function(package) {
 			console.log("packet pushed");
