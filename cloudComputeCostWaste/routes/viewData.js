@@ -46,7 +46,7 @@ function getData(res, images){
                 //if data on the instance was provided by the probe user we can add cost calculations
                 //this doesn't need to be called every time, but I can't get it synchronized without doing so.
                 //Big performance gains if fixed
-        		Instance_Type.findInstance(data[j]._provider, data[j].instance_type, data[j].os, function(err, instance){
+        		Instance_Type.findInstance(data[j].instance_type, function(err, instance){
                     if(err) {
                         console.log(err);
                         res.redirect('/');
@@ -63,7 +63,7 @@ function getData(res, images){
                             btu_waste: 0,
                             provider: null,
                             type: null,
-                            os: null,
+                            locale: null,
                             billing_unit: null,
                             price_hour: null,
                             data: [data[j]]
@@ -72,8 +72,12 @@ function getData(res, images){
                         if(instance != null) {
                             uuidList[i].provider = instance.provider;
                             uuidList[i].type = instance.type;
-                            uuidList[i].os = instance.os;
-                            uuidList[i].billing_unit = instance.billing_unit;
+                            uuidList[i].locale = instance.locale;
+                            if(instance.billing_unit != null)
+                                uuidList[i].billing_unit = instance.billing_unit;
+                            else { //billing unit not defined use resolution of 1 second
+                                uuidList[i].billing_unit = 1;
+                            }
                             uuidList[i].price_hour = instance.price_hour;
                             console.log("Added instance info");
                         }

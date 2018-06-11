@@ -7,9 +7,7 @@ DESTINATION="localhost:3000"
 PORT=3000 #Port on which app traffic takes place
 PING_RATE=2 #how long between probe pings (use at least 1)
 #IF on public cloud 
-PROVIDER="Amazon Web Services" #Cloud service provider
-INSTANCE_TYPE="t2.micro" #Instance type for cost calculations
-OS="RHEL" #Operating system running on the instance
+INSTANCE_TYPE="5b1ecf3b6bcc0a4d5d81aa7a"
 
 ##CODE - Do not modify##
 function CPU_usage(){
@@ -132,9 +130,7 @@ while [ true ]; do
 				"mem":"'$MEMORY'", 
 				"disk":"'$DISK'", 
 				"time":"'$TIME'",
-				"provider":"'$PROVIDER'",
-				"instance_type":"'$INSTANCE_TYPE'",
-				"os":"'$OS'",
+				"instance_type":"'$INSTANCE_TYPE'"
 			}'
 
 	send_data "$newData"

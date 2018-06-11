@@ -20,6 +20,7 @@ var viewProfile = require('./routes/viewProfile');
 var viewData = require('./routes/viewData');
 var downloadProbe = require('./routes/downloadProbe');
 var probePost = require('./routes/probePost');
+var updateProviders = require('./routes/updateProviders');
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -46,6 +47,7 @@ app.use('/viewProfile', viewProfile);
 app.use('/viewData', viewData);
 app.use('/downloadProbe', downloadProbe);
 app.use('/probePost', probePost);
+app.use('/updateProviders', updateProviders);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

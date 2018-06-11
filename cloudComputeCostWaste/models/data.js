@@ -1,9 +1,9 @@
 var mongoose = require('mongoose');
 
-
 // User Schema
 var DataSchema = mongoose.Schema({
 	_image: {type: mongoose.Schema.Types.ObjectId, ref: 'Image'},
+	_instance_type: {type: mongoose.Schema.Types.ObjectId, ref: 'Instance_Type'},
 	uuid: String, 
 	cpu: Number, 
 	mem: Number, 
@@ -12,7 +12,6 @@ var DataSchema = mongoose.Schema({
 });
 
 var Data = module.exports = mongoose.model('Data', DataSchema);
-
 
 module.exports.addData = function (req, res, done)
 {
@@ -29,6 +28,7 @@ module.exports.addData = function (req, res, done)
 	    } else {
 	        var data = new Data({
 				_image: imageRef,
+				_instance_type: req.body.instance_type,
 				uuid: req.body.uuid, 
 				cpu: req.body.cpu, 
 				mem: req.body.mem, 
