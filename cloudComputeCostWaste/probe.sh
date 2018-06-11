@@ -1,13 +1,17 @@
 #!/bin/bash
 ##CONFIG##
-USER_ID="5b1818145f2f3b51b3c5b0f4"
-APP_TOKEN="5b1aa629cfcc4a406d04acd9" #Token provided which uniquelly identifies application
-IMAGE_TOKEN="5b1aa63dcfcc4a406d04acdd" #Token provided which uniquelly identifies image
+USER_ID="5b1818145f2f3b51b3c5b0f4" #Probably not necessary and will probably be removed
+APP_TOKEN="5b1b97d039cabc0fe281c6bf" #Token provided which uniquely identifies application
+IMAGE_TOKEN="5b1b97ea39cabc0fe281c6c1" #Token provided which uniquely identifies image
 DESTINATION="localhost:3000"
 PORT=3000 #Port on which app traffic takes place
 PING_RATE=2 #how long between probe pings (use at least 1)
+#IF on public cloud 
+PROVIDER="Amazon Web Services" #Cloud service provider
+INSTANCE_TYPE="t2.micro" #Instance type for cost calculations
+OS="RHEL" #Operating system running on the instance
 
-
+##CODE - Do not modify##
 function CPU_usage(){
 	TOTAL_CPU_USAGE=0
 	TOTAL_CPU=$(grep -c ^processor /proc/cpuinfo) #set number of CPUs to check for
@@ -120,7 +124,18 @@ while [ true ]; do
     TIME=$(date +%s)
 
 	#This is where new data will be extracted and sent
-	newData='{"oauthid": "'$USER_ID'", "app":"'$APP_TOKEN'", "image":"'$IMAGE_TOKEN'",  "uuid":"'$UUID'", "cpu":"'$CPU'", "mem":"'$MEMORY'", "disk":"'$DISK'", "time":"'$TIME'"}'
+	newData='{"oauthid": "'$USER_ID'", 
+				"app":"'$APP_TOKEN'", 
+				"image":"'$IMAGE_TOKEN'",  
+				"uuid":"'$UUID'", 
+				"cpu":"'$CPU'", 
+				"mem":"'$MEMORY'", 
+				"disk":"'$DISK'", 
+				"time":"'$TIME'",
+				"provider":"'$PROVIDER'",
+				"instance_type":"'$INSTANCE_TYPE'",
+				"os":"'$OS'",
+			}'
 
 	send_data "$newData"
 	res=$?
