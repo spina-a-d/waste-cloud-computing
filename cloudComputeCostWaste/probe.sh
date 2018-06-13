@@ -31,13 +31,13 @@ function CPU_usage(){
 	    for VALUE in "${CPU[@]}"; do
 	        let "TOTAL=$TOTAL+$VALUE"
 	    done
-
+	    echo "not loop"
 	    # Calculate the CPU usage since we last checked.
 	    let "DIFF_IDLE=$IDLE-${PREV_IDLE[0]}"
 	    let "DIFF_TOTAL=$TOTAL-${PREV_TOTAL[0]}"
 	    let "DIFF_USAGE=(1000*($DIFF_TOTAL-$DIFF_IDLE)/($DIFF_TOTAL+5))/10"
 	    let "SUM=$SUM+$DIFF_USAGE"
-
+	    
 	    # Remember the total and idle CPU times for the next check.
 	    PREV_TOTAL[0]="$TOTAL"
 	    PREV_IDLE[0]="$IDLE"
@@ -45,6 +45,7 @@ function CPU_usage(){
 	    # Wait before checking again.
 	    declare -a 'range=({'"1..$TOTAL_CPU"'})'
 	    for i in ${range[@]};do 
+	    	echo "not loop"
 	        CPU=(`cat /proc/stat | grep "^cpu$i "`) # Get the total CPU statistics.
 	        unset CPU[0]                            # Discard the "cpu" prefix.
 	        IDLE=${CPU[4]}                          # Get the idle CPU time.
@@ -56,8 +57,8 @@ function CPU_usage(){
 	        done
 
 	        # Calculate the CPU usage since we last checked.
-	        let "DIFF_IDLE=$IDLE-${PREV_IDLE[$i]}"
-	        let "DIFF_TOTAL=$TOTAL-${PREV_TOTAL[$i]}"
+	        let "DIFF_IDLE=$IDLE-${PREV_IDLE[$i]:-0}"
+	        let "DIFF_TOTAL=$TOTAL-${PREV_TOTAL[$i]:-0}"
 	        let "DIFF_USAGE=(1000*($DIFF_TOTAL-$DIFF_IDLE)/($DIFF_TOTAL+5))/10"
 	        let "SUM=$SUM+$DIFF_USAGE"
 
