@@ -8,13 +8,13 @@ var Instance_Type = require('../models/instance_type');
 const checkAuthentication = require('../utilities/auth');
 
 /* GET home page. */
-router.get('/', function(req, res, next) {
+router.get('/', checkAuthentication, function(req, res, next) {
 	displayData(req, res);
 });
 
 function displayData(req, res) {
     //normall pass req.session.user._id as code
-    Image.getImagesByUser('5b1818145f2f3b51b3c5b0f4', function (err, images) {
+    Image.getImagesByUser(req.user._id, function (err, images) {
         if (!images) {
             res.redirect('/');
         } else if (err) {
