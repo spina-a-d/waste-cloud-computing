@@ -27,7 +27,7 @@
 					    			<p>Total Idletime : <%- dataPackage[i].uuidList[j].idletime %> seconds <p>
 					    			<% if(dataPackage[i].uuidList[j].billing_unit != null && dataPackage[i].uuidList[j].price_hour != null) {%>
 						    			<p>Total Cost : <%- dataPackage[i].uuidList[j].cost %>$ <p>
-						    			<p>Total Waste : <%- (dataPackage[i].uuidList[j].idletime +  dataPackage[i].uuidList[j].btu_waste) * dataPackage[i].uuidList[j].price_hour %>$ <p>
+						    			<p>Total Waste : <%- (dataPackage[i].uuidList[j].idletime / dataPackage[i].uuidList[j].billing_unit) * dataPackage[i].uuidList[j].price_hour + dataPackage[i].uuidList[j].btu_waste%>$ <p>
 					    			<% } %>
 		                    	</ul>
 		                    	<div id="<%- dataPackage[i].uuidList[j].uuid %>" style="height:250px;"></div>

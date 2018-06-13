@@ -26,12 +26,13 @@ function displayData(req, res) {
 }
 
 function getData(res, images){
-    console.log("searching for data for images: " + images[0]._id);
+    
     let itemsProcessed = 0;
     let dataPackage = [];
     let threshold = 20;
 
     for(let i = 0; i < images.length; ++i) {
+    	console.log("searching for data for images: " + images[i]._id);
         Data.getDataByImage(images[i]._id, function(err, data) {
             if (err) {
                 console.log(err);
@@ -39,14 +40,29 @@ function getData(res, images){
             }
             let uuidList = [];
             let dataProcessed = 0;
+
             console.log("About to process data");
             //sorting the data into uuid buckets
+            if(data.length == 0) {
+            	//CASE :: NO DATA FOR IMAGE
+            	dataPackage.push({
+                    imageName: images[i].name,
+                    uuidList: []
+                });
+                ++itemsProcessed;
+                if(itemsProcessed == images.length){
+                    console.log("Rendering!");
+                    res.render('data', {
+                        dataPackage: dataPackage
+                    });
+                }
+            }
             for(let j = 0; j < data.length; ++j) {
                 //store unique uuids for an image.
                 //if data on the instance was provided by the probe user we can add cost calculations
                 //this doesn't need to be called every time, but I can't get it synchronized without doing so.
                 //Big performance gains if fixed
-        		Instance_Type.findInstance(data[j].instance_type, function(err, instance){
+        		Instance_Type.findInstance(data[j]._instance_type, function(err, instance){
                     if(err) {
                         console.log(err);
                         res.redirect('/');
@@ -70,15 +86,15 @@ function getData(res, images){
                         });
                         console.log("pushed a uuid");
                         if(instance != null) {
-                            uuidList[i].provider = instance.provider;
-                            uuidList[i].type = instance.type;
-                            uuidList[i].locale = instance.locale;
+                            uuidList[uuidList.length - 1].provider = instance._provider;
+                            uuidList[uuidList.length - 1].type = instance.type;
+                            uuidList[uuidList.length - 1].locale = instance.locale;
                             if(instance.billing_unit != null)
-                                uuidList[i].billing_unit = instance.billing_unit;
+                                uuidList[uuidList.length - 1].billing_unit = instance.billing_unit;
                             else { //billing unit not defined use resolution of 1 second
-                                uuidList[i].billing_unit = 1;
+                                uuidList[uuidList.length - 1].billing_unit = 3600;
                             }
-                            uuidList[i].price_hour = instance.price_hour;
+                            uuidList[uuidList.length - 1].price_hour = instance.price_hour;
                             console.log("Added instance info");
                         }
                     }
@@ -94,6 +110,7 @@ function getData(res, images){
                                 uuidList: uuidList 
                             });
                             ++itemsProcessed;
+                            console.log(itemsProcessed);
                             if(itemsProcessed == images.length){
                                 console.log("Rendering!");
                                 res.render('data', {
@@ -118,38 +135,37 @@ function compareTimes(a, b) {
 
 function processBuckets(uuidList, threshold, callback) {
     console.log("moving to bucket processing");
-    let multipleResponseTime = 2; //for resolution of instance death
+    let multipleResponseTime = 10; //for resolution of instance death
     //now check which uuids are alive
     for(let i = 0; i < uuidList.length; ++i) {
         let responseTime = 0;
-        let currentWindowSize = 0;
+        let currentWindowSize = 1;
 
         //needs to be sorted by time so window can be shifted along
         uuidList[i].data.sort(compareTimes);
 
-        for(let j = 0; j < uuidList[i].data.length; ++j) {
+        for(let j = 1; j < uuidList[i].data.length; ++j) {
             ++currentWindowSize;
             //check average response time
-            if(j != 0){
-                avgResponseTime = Math.round(responseTime / currentWindowSize);
-                if(responseTime != 0 && //dead in this window reset
-                    uuidList[i].data[j].time - uuidList[i].data[j - 1].time > multipleResponseTime * avgResponseTime) {
-                    responseTime = 0;
-                    currentWindowSize = 0;
-                    if(uuidList[i].billing_unit != null && 
-                        uuidList[i].price_hour != null) {
-                        cost += (uuidList[i].uptime / billing_unit) * price_hour + (uuidList[i].uptime % billing_unit > 0 ? 1 : 0) * price_hour;
-                        btu_waste += (uuidList[i].uptime % billing_unit > 0 ? 1 : 0) * price_hour;
-                    }
-                } 
-                else { //not dead, add times and continue
-                    responseTime += uuidList[i].data[j].time - uuidList[i].data[j - 1].time;  
-                    uuidList[i].uptime += uuidList[i].data[j].time - uuidList[i].data[j - 1].time;
-                    if(uuidList[i].data[j].cpu < threshold) {
-                        uuidList[i].idletime += uuidList[i].data[j].time - uuidList[i].data[j - 1].time;
-                    }
-                } 
-            }
+            avgResponseTime = Math.ceil(responseTime / currentWindowSize);
+            if(responseTime != 0 && //dead in this window reset
+                uuidList[i].data[j].time - uuidList[i].data[j - 1].time > multipleResponseTime * avgResponseTime) {
+                if(uuidList[i].billing_unit != null && 
+                    uuidList[i].price_hour != null) {
+                    let billed_time = Math.ceil(responseTime / uuidList[i].billing_unit);
+                    uuidList[i].cost += billed_time * uuidList[i].price_hour;
+                    uuidList[i].btu_waste += (billed_time - (responseTime / uuidList[i].billing_unit)) * uuidList[i].price_hour;
+                }
+                responseTime = 0;
+                currentWindowSize = 0;
+            } 
+            else { //not dead, add times and continue
+                responseTime += uuidList[i].data[j].time - uuidList[i].data[j - 1].time;  
+                uuidList[i].uptime += uuidList[i].data[j].time - uuidList[i].data[j - 1].time;
+                if(uuidList[i].data[j].cpu < threshold) {
+                    uuidList[i].idletime += uuidList[i].data[j].time - uuidList[i].data[j - 1].time;
+                }
+            } 
         }
         avgResponseTime = Math.round(responseTime / currentWindowSize);
         if( uuidList[i].data.length > 0) {
@@ -161,6 +177,14 @@ function processBuckets(uuidList, threshold, callback) {
         }
         else {
             uuidList[i].alive = false;
+        }
+        if(uuidList[i].alive === false &&
+        	uuidList[i].billing_unit != null && 
+            uuidList[i].price_hour != null) {
+        	console.log("adding to cost");
+            let billed_time = Math.ceil(responseTime / uuidList[i].billing_unit);
+            uuidList[i].cost += billed_time * uuidList[i].price_hour;
+            uuidList[i].btu_waste += (billed_time - (responseTime / uuidList[i].billing_unit)) * uuidList[i].price_hour;
         }
     }
     callback();

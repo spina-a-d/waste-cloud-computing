@@ -13,9 +13,6 @@ var Instance_Type = module.exports = mongoose.model('Instance_Type', Instance_Ty
 
 module.exports.findInstance = function (id, callback)
 {
-	if(typeof id === undefined) {
-		callback(null);
-	}
 	var id = mongoose.Types.ObjectId(id);
 	Instance_Type.findOne({ _id: id }, callback);
 };

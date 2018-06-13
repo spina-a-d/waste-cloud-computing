@@ -52,7 +52,7 @@ module.exports.getDataByImage = function (code, callback)
 	var Image = mongoose.model('Image');
 
 	var id = mongoose.Types.ObjectId(code);
-	console.log("Searching for images by user");
+	console.log("Searching for images by image");
 	Data.find({ _image: id }, callback);
 };
 
