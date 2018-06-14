@@ -31,7 +31,6 @@ function CPU_usage(){
 	    for VALUE in "${CPU[@]}"; do
 	        let "TOTAL=$TOTAL+$VALUE"
 	    done
-	    echo "not loop"
 	    # Calculate the CPU usage since we last checked.
 	    let "DIFF_IDLE=$IDLE-${PREV_IDLE[0]}"
 	    let "DIFF_TOTAL=$TOTAL-${PREV_TOTAL[0]}"
