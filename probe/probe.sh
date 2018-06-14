@@ -44,7 +44,6 @@ function CPU_usage(){
 	    # Wait before checking again.
 	    declare -a 'range=({'"1..$TOTAL_CPU"'})'
 	    for i in ${range[@]};do 
-	    	echo "not loop"
 	        CPU=(`cat /proc/stat | grep "^cpu$i "`) # Get the total CPU statistics.
 	        unset CPU[0]                            # Discard the "cpu" prefix.
 	        IDLE=${CPU[4]}                          # Get the idle CPU time.
