@@ -8,13 +8,13 @@ var Instance_Type = require('../models/instance_type');
 const checkAuthentication = require('../utilities/auth');
 
 /* GET home page. */
-router.get('/', checkAuthentication, function(req, res, next) {
+router.get('/', /*checkAuthentication,*/ function(req, res, next) {
 	displayData(req, res);
 });
 
 function displayData(req, res) {
     //normall pass req.session.user._id as code
-    Image.getImagesByUser(req.user._id, function (err, images) {
+    Image.getImagesByUser(/*req.user._id*/'5b1818145f2f3b51b3c5b0f4', function (err, images) {
         if (!images) {
             res.redirect('/');
         } else if (err) {
@@ -82,7 +82,8 @@ function getData(res, images){
                             locale: null,
                             billing_unit: null,
                             price_hour: null,
-                            data: [data[j]]
+                            data: [data[j]],
+                            cost_at_btu: []
                         });
                         console.log("pushed a uuid");
                         if(instance != null) {
@@ -107,7 +108,7 @@ function getData(res, images){
                             console.log("Bucket finished");
                             dataPackage.push({
                                 imageName: images[i].name,
-                                uuidList: uuidList 
+                                uuidList: uuidList,
                             });
                             ++itemsProcessed;
                             console.log(itemsProcessed);
@@ -140,10 +141,10 @@ function processBuckets(uuidList, threshold, callback) {
     for(let i = 0; i < uuidList.length; ++i) {
         let responseTime = 0;
         let currentWindowSize = 1;
-
         //needs to be sorted by time so window can be shifted along
         uuidList[i].data.sort(compareTimes);
-
+        let btu_start = uuidList[i].data[0].time;
+        let btu_waste_time = 0;
         for(let j = 1; j < uuidList[i].data.length; ++j) {
             ++currentWindowSize;
             //check average response time
@@ -152,9 +153,20 @@ function processBuckets(uuidList, threshold, callback) {
                 uuidList[i].data[j].time - uuidList[i].data[j - 1].time > multipleResponseTime * avgResponseTime) {
                 if(uuidList[i].billing_unit != null && 
                     uuidList[i].price_hour != null) {
-                    let billed_time = Math.ceil(responseTime / uuidList[i].billing_unit);
-                    uuidList[i].cost += billed_time * uuidList[i].price_hour;
-                    uuidList[i].btu_waste += (billed_time - (responseTime / uuidList[i].billing_unit)) * uuidList[i].price_hour;
+                	if((uuidList[i].data[j].time - btu_start) > uuidList[i].billing_unit) {
+                		console.log("BTU ended");
+                		let billed_time = 1; //non-magic number, add 1 btu for the closed btu
+                		uuidList[i].cost += billed_time * uuidList[i].price_hour;
+                        uuidList[i].cost_at_btu.push({
+                            cost_at_time_point: uuidList[i].cost,
+                            time: uuidList[i].data[j].time
+                        });
+                		uuidList[i].btu_waste += (billed_time - (btu_waste_time / uuidList[i].billing_unit)) * uuidList[i].price_hour;
+                		btu_start = uuidList[i].data[j].time;
+                		btu_waste_time = 0;
+                	} else {
+                		btu_waste_time += uuidList[i].data[j].time - uuidList[i].data[j - 1].time;
+                	}
                 }
                 responseTime = 0;
                 currentWindowSize = 0;
@@ -181,9 +193,15 @@ function processBuckets(uuidList, threshold, callback) {
         if(uuidList[i].alive === false &&
         	uuidList[i].billing_unit != null && 
             uuidList[i].price_hour != null) {
-        	console.log("adding to cost");
-            let billed_time = Math.ceil(responseTime / uuidList[i].billing_unit);
+        	console.log("Final Cost addition");
+            let billed_time = Math.ceil((uuidList[i].data[uuidList[i].data.length - 1].time - btu_start) / uuidList[i].billing_unit);
             uuidList[i].cost += billed_time * uuidList[i].price_hour;
+            for(let k = 0; k < billed_time; ++k) {
+                uuidList[i].cost_at_btu.push({
+                    cost_at_time_point: uuidList[i].cost,
+                    time: btu_start + ((k + 1) * uuidList[i].billing_unit)
+                });
+            }
             uuidList[i].btu_waste += (billed_time - (responseTime / uuidList[i].billing_unit)) * uuidList[i].price_hour;
         }
     }

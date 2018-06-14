@@ -35,7 +35,7 @@
 						    	<label for="name">New Application Name</label>
 						    	<input type="text" name="name_app" value="" />
 						  	</div>
-						  	<button name="action" type="submit" value="app.create">Add New Application</button>
+						  	<button name="action" class="btn btn-primary" type="submit" value="app.create">Add New Application</button>
 						</form>
 				    </div>
 				    <div id="info-column" class="col-sm-8">
@@ -46,8 +46,8 @@
 					    			<div class="form-group">
 		                                <li> 
 		                                	<%-renderPackage.applications[i].name%> : <%-renderPackage.applications[i]._id%>
-		                                	<button name="action" type="submit" value="app.delete.<%-renderPackage.applications[i]._id%>">Delete</button>
-		                                	<button name="action" type="submit" value="image.create.<%-renderPackage.applications[i]._id%>">Add Image</button>
+		                                	<button name="action" class="btn btn-danger" type="submit" value="app.delete.<%-renderPackage.applications[i]._id%>">Delete</button>
+		                                	<button name="action" class="btn btn-primary type="submit" value="image.create.<%-renderPackage.applications[i]._id%>">Add Image</button>
 		                                	<input type="text" name="name<%-renderPackage.applications[i]._id%>" value=""/>
 		                                </li>
 		                            </div>
@@ -58,7 +58,7 @@
 							    			<div class="form-group">
 				                                <li> 
 				                                	<%-renderPackage.applications[i].images[j].name%> : <%-renderPackage.applications[i].images[j]._id%>
-				                                	<button name="action" type="submit" value="image.delete.<%-renderPackage.applications[i].images[j]._id%>">Delete</button>
+				                                	<button name="action" class="btn btn-danger" type="submit" value="image.delete.<%-renderPackage.applications[i].images[j]._id%>">Delete</button>
 				                                </li>
 				                            </div>
 			                        	</form>

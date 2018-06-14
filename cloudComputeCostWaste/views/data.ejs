@@ -16,10 +16,17 @@
 		<div id = "page-content-wrapper">
             <div class="container-fluid">
             	<% for(var i = 0; i < dataPackage.length; ++i) {%>
+            		<% if(dataPackage[i].uuidList.length) {%>
+						<div class="row">
+							<div id="welcome-column" class="col-lg">
+								<h4> <%- dataPackage[i].imageName %> </h4>
+								<div id="<%- dataPackage[i].imageName %>" style="height:250px;"></div>
+							</div>
+						</div>
+					<% } %> 
 					<div class="row">
 						<% for(var j = 0; j < dataPackage[i].uuidList.length; ++j) {%>
 							<div id="info-column" class="col-sm">
-								<h4> <%- dataPackage[i].imageName %> </h4>
 					    		<ul>
 					    			<p> <%- dataPackage[i].uuidList[j].uuid %> <p>
 					    			<p> Alive? : <%- dataPackage[i].uuidList[j].alive %> <p>
@@ -27,12 +34,17 @@
 					    			<p>Total Idletime : <%- dataPackage[i].uuidList[j].idletime %> seconds <p>
 					    			<% if(dataPackage[i].uuidList[j].billing_unit != null && dataPackage[i].uuidList[j].price_hour != null) {%>
 						    			<p>Total Cost : <%- dataPackage[i].uuidList[j].cost %>$ <p>
-						    			<p>Total Waste : <%- (dataPackage[i].uuidList[j].idletime / dataPackage[i].uuidList[j].billing_unit) * dataPackage[i].uuidList[j].price_hour + dataPackage[i].uuidList[j].btu_waste%>$ <p>
+						    			<p>Total Waste : <%- (dataPackage[i].uuidList[j].idletime / dataPackage[i].uuidList[j].billing_unit) 
+						    				* dataPackage[i].uuidList[j].price_hour + 
+						    				dataPackage[i].uuidList[j].btu_waste%>$ <p>
 					    			<% } %>
 		                    	</ul>
-		                    	<div id="<%- dataPackage[i].uuidList[j].uuid %>" style="height:250px;"></div>
+		                    	<div id="<%- dataPackage[i].uuidList[j].uuid %>util" style="height:250px;"></div>
+		                    	<br>
+		                    	<div id="<%- dataPackage[i].uuidList[j].uuid %>waste" style="height:250px;"></div>
+		                    	<br>
 		                    </div>
-                    	<% } %> 
+	                	<% } %> 
 					</div>	
 				<% } %>
 			</div>
@@ -43,12 +55,85 @@
 		    var t = new Date(1970, 0, 1); // Epoch
 		    t.setSeconds(secs);
 		    return t;
+		};
+
+		function stackedArea(traces) {
+			for(var i = 1; i < traces.length; ++i) {
+				for(var j = 0; j < (Math.min(traces[i]['y'].length, traces[i-1]['y'].length)); ++j) {
+					traces[i]['y'][j] += traces[i - 1]['y'][j];
+				}
+			}
+			return traces;
+		};
+
+		function compareTimes(a, b) {
+			if (a.time < b.time)
+		    	return -1;
+		  	if (a.time > b.time)
+		    	return 1;
+		  	return 0;
 		}
 
+		function generateAxis(image) {
+			let traces = [];
+			let bucket = [];
+			for(let i = 0; i < image.uuidList.length; ++i) {
+				let type = image.uuidList[i].type;
+				if(traces.map(function(e) { return e.type; }).indexOf(type) < 0) { //don't already have this type so push it
+					traces.push({
+						type: type,
+						x: [],
+						y: [],
+						fill: 'tozeroy'
+					});
+					bucket.push({
+						type: type,
+						btu: image.uuidList[i].billing_unit,
+						data: []
+					});
+				}
+				let location = bucket.map(function(e) { return e.type; }).indexOf(type);
+				for(let j = 0; j < image.uuidList[i].cost_at_btu.length; ++j) {
+					bucket[location].data.push(image.uuidList[i].cost_at_btu[j]);
+				}
+			}
+			for(let i = 0; i < bucket.length; ++i) {
+				bucket[i].data.sort(compareTimes);
+				let btu_window = bucket[i].btu;
+				let btu_start = 0;
+				let cost = 0;
+				let location = traces.map(function(e) { return e.type; }).indexOf(bucket[i].type);
+				for(let j = 0; j < bucket[i].data.length; ++j) {
+					if(!btu_start){
+						btu_start = bucket[i].data[j].time;
+					}
+					if(bucket[i].data[j].time - btu_start < btu_window) {
+						cost += bucket[i].data[j].cost_at_time_point;
+					}
+					else {
+						traces[location].y.push(cost);
+						traces[location].x.push(toDateTime(btu_start + btu_window));
+						btu_start = bucket[i].data[j].time;
+						cost = 0;
+					}
+				}
+			}
+
+			return traces;
+		};
+
 		for(var i = 0; i < dataPackage.length; ++i) {
+			//FILLED AREA PLOT
+			if(dataPackage[i].uuidList.length) {
+				var TESTER = document.getElementById(dataPackage[i].imageName);
+				var traces = generateAxis(dataPackage[i]);
+				Plotly.newPlot(TESTER, stackedArea(traces), {title: 'Cost per Instance Type over Time'});
+			}
+
 			for(var j = 0; j < dataPackage[i].uuidList.length; ++j) {
+				// UTILIZATION PLOT
 				var data = [];
-				var TESTER = document.getElementById(dataPackage[i].uuidList[j].uuid);
+				var TESTER = document.getElementById(dataPackage[i].uuidList[j].uuid + "util");
 				var WIDTH = document.getElementById("info-column").clientwidth;
 				var x_axis = [];
 				var y_axis = [];
@@ -64,7 +149,6 @@
 				for(var m = 0; m < scatterNames.length; ++m) {
 					var data_y_axis = [];
 					for(var n = 0; n < y_axis.length; ++n) {
-						console.log(y_axis[n][m]);
 						data_y_axis.push(y_axis[n][m]);
 					}
 					data.push({
@@ -109,6 +193,46 @@
 				  	}
 				};
 				Plotly.plot( TESTER, data, layout );
+
+				//WASTE DONUT CHART
+				var TESTER = document.getElementById(dataPackage[i].uuidList[j].uuid + "waste");
+				var data = [{
+				  	values: [dataPackage[i].uuidList[j].cost - ((dataPackage[i].uuidList[j].idletime / dataPackage[i].uuidList[j].billing_unit) * dataPackage[i].uuidList[j].price_hour) - dataPackage[i].uuidList[j].btu_waste, 
+				  			(dataPackage[i].uuidList[j].idletime / dataPackage[i].uuidList[j].billing_unit)* dataPackage[i].uuidList[j].price_hour, 
+				  			dataPackage[i].uuidList[j].btu_waste],
+				  	labels: ['Efficient Time', 'Idle Time Waste', 'BTU Waste'],
+				  	name: 'As a percentage of total cost',
+				  	hoverinfo: 'label+percent+name',
+				  	hole: .4,
+				  	type: 'pie'
+				}];
+
+				var layout = {
+				  	title: 'Waste Totals',
+				  	annotations:
+				    [{
+				      	font: {
+				        	size: 12
+				      	},
+				      	showarrow: false,
+				      	text: 'Waste: ' + Math.round(((dataPackage[i].uuidList[j].idletime / dataPackage[i].uuidList[j].billing_unit) 
+						    				* dataPackage[i].uuidList[j].price_hour + 
+						    				dataPackage[i].uuidList[j].btu_waste / dataPackage[i].uuidList[j].cost) * 100) + '%',
+				      	x: 0.5,
+				      	y: 0.5
+				    }],
+				  	height: 250,
+				  	width: WIDTH,
+				  	margin: {
+					    l: 0,
+					    r: 0,
+					    b: 20,
+					    t: 30,
+					    pad: 2
+				  	}
+				};
+
+				Plotly.newPlot(TESTER, data, layout);
 			}
 		}
 	</script>
