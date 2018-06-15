@@ -33,10 +33,10 @@
 					    			<p>Total Uptime : <%- dataPackage[i].uuidList[j].uptime %> seconds <p>
 					    			<p>Total Idletime : <%- dataPackage[i].uuidList[j].idletime %> seconds <p>
 					    			<% if(dataPackage[i].uuidList[j].billing_unit != null && dataPackage[i].uuidList[j].price_hour != null) {%>
-						    			<p>Total Cost : <%- dataPackage[i].uuidList[j].cost %>$ <p>
-						    			<p>Total Waste : <%- (dataPackage[i].uuidList[j].idletime / dataPackage[i].uuidList[j].billing_unit) 
+						    			<p>Total Cost : <%- parseFloat((dataPackage[i].uuidList[j].cost).toFixed(4)) %>$ <p>
+						    			<p>Total Waste : <%- parseFloat(((dataPackage[i].uuidList[j].idletime / dataPackage[i].uuidList[j].billing_unit) 
 						    				* dataPackage[i].uuidList[j].price_hour + 
-						    				dataPackage[i].uuidList[j].btu_waste%>$ <p>
+						    				dataPackage[i].uuidList[j].btu_waste).toFixed(4)) %>$ <p>
 					    			<% } %>
 		                    	</ul>
 		                    	<div id="<%- dataPackage[i].uuidList[j].uuid %>util" style="height:250px;"></div>
@@ -196,10 +196,11 @@
 
 				//WASTE DONUT CHART
 				var TESTER = document.getElementById(dataPackage[i].uuidList[j].uuid + "waste");
+				var idle_time = (dataPackage[i].uuidList[j].idletime / dataPackage[i].uuidList[j].billing_unit)* dataPackage[i].uuidList[j].price_hour;
+				var btu_waste = dataPackage[i].uuidList[j].btu_waste;
+				var efficient_time = dataPackage[i].uuidList[j].cost - ((dataPackage[i].uuidList[j].idletime / dataPackage[i].uuidList[j].billing_unit) * dataPackage[i].uuidList[j].price_hour) - dataPackage[i].uuidList[j].btu_waste;
 				var data = [{
-				  	values: [dataPackage[i].uuidList[j].cost - ((dataPackage[i].uuidList[j].idletime / dataPackage[i].uuidList[j].billing_unit) * dataPackage[i].uuidList[j].price_hour) - dataPackage[i].uuidList[j].btu_waste, 
-				  			(dataPackage[i].uuidList[j].idletime / dataPackage[i].uuidList[j].billing_unit)* dataPackage[i].uuidList[j].price_hour, 
-				  			dataPackage[i].uuidList[j].btu_waste],
+				  	values: [efficient_time, idle_time, btu_waste],
 				  	labels: ['Efficient Time', 'Idle Time Waste', 'BTU Waste'],
 				  	name: 'As a percentage of total cost',
 				  	hoverinfo: 'label+percent+name',
@@ -215,9 +216,7 @@
 				        	size: 12
 				      	},
 				      	showarrow: false,
-				      	text: 'Waste: ' + Math.round(((dataPackage[i].uuidList[j].idletime / dataPackage[i].uuidList[j].billing_unit) 
-						    				* dataPackage[i].uuidList[j].price_hour + 
-						    				dataPackage[i].uuidList[j].btu_waste / dataPackage[i].uuidList[j].cost) * 100) + '%',
+				      	text: 'Waste: ' + Math.round(((idle_time + btu_waste) / dataPackage[i].uuidList[j].cost) * 100) + '%',
 				      	x: 0.5,
 				      	y: 0.5
 				    }],

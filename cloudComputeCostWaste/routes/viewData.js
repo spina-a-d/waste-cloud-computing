@@ -108,7 +108,6 @@ async function sortData(res, data, images, i) {
                                 uuidList: uuidList,
                             });
                             ++itemsProcessed;
-                            console.log(itemsProcessed);
                             if(itemsProcessed == images.length){
                                 console.log("Rendering!");
                                 res.render('data', {
@@ -130,7 +129,6 @@ async function sortData(res, data, images, i) {
                             uuidList: uuidList,
                         });
                         ++itemsProcessed;
-                        console.log(itemsProcessed);
                         if(itemsProcessed == images.length){
                             console.log("Rendering!");
                             res.render('data', {
@@ -157,7 +155,7 @@ function compareTimes(a, b) {
 
 function processBuckets(uuidList, threshold, callback) {
     console.log("moving to bucket processing");
-    let multipleResponseTime = 10; //for resolution of instance death
+    let multipleResponseTime = 5; //for resolution of instance death
     //now check which uuids are alive
     for(let i = 0; i < uuidList.length; ++i) {
         let responseTime = 0;
@@ -176,13 +174,13 @@ function processBuckets(uuidList, threshold, callback) {
                     uuidList[i].price_hour != null) {
                 	if((uuidList[i].data[j].time - btu_start) > uuidList[i].billing_unit) {
                 		console.log("BTU ended");
-                		let billed_time = 1; //non-magic number, add 1 btu for the closed btu
+                		let billed_time = 1.0; //non-magic number, add 1 btu for the closed btu
                 		uuidList[i].cost += billed_time * uuidList[i].price_hour;
                         uuidList[i].cost_at_btu.push({
                             cost_at_time_point: uuidList[i].cost,
                             time: uuidList[i].data[j].time
                         });
-                		uuidList[i].btu_waste += (billed_time - (btu_waste_time / uuidList[i].billing_unit)) * uuidList[i].price_hour;
+                		uuidList[i].btu_waste += (btu_waste_time / uuidList[i].billing_unit) * uuidList[i].price_hour;
                 		btu_start = uuidList[i].data[j].time;
                 		btu_waste_time = 0;
                 	} else {
@@ -201,7 +199,7 @@ function processBuckets(uuidList, threshold, callback) {
             } 
         }
         avgResponseTime = Math.round(responseTime / currentWindowSize);
-        if( uuidList[i].data.length > 0) {
+        if(uuidList[i].data.length > 0) {
             //check that the last ping was not more than 2 times the average response time for the current window
             // ago or its likely dead unless we find otherwise
             if(Math.round((new Date()).getTime() / 1000) - uuidList[i].data[uuidList[i].data.length - 1].time > multipleResponseTime * avgResponseTime){
@@ -211,11 +209,11 @@ function processBuckets(uuidList, threshold, callback) {
         else {
             uuidList[i].alive = false;
         }
-        if(uuidList[i].alive === false &&
-        	uuidList[i].billing_unit != null && 
+        if(uuidList[i].billing_unit != null && 
             uuidList[i].price_hour != null) {
         	console.log("Final Cost addition");
             let billed_time = Math.ceil((uuidList[i].data[uuidList[i].data.length - 1].time - btu_start) / uuidList[i].billing_unit);
+            console.log("time added " + billed_time);
             uuidList[i].cost += billed_time * uuidList[i].price_hour;
             for(let k = 0; k < billed_time; ++k) {
                 uuidList[i].cost_at_btu.push({
