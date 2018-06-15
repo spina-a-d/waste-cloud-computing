@@ -6,8 +6,6 @@ var Image = require('../models/image');
 var Data = require('../models/data');
 var Instance_Type = require('../models/instance_type');
 const checkAuthentication = require('../utilities/auth');
-
-var threshold = 20;
 var itemsProcessed = 0;
 var dataPackage = [];
 
@@ -17,7 +15,10 @@ router.get('/', /*checkAuthentication,*/ function(req, res, next) {
 });
 
 function displayData(req, res) {
-    //normall pass req.session.user._id as code
+	itemsProcessed = 0;
+	dataPackage = [];
+
+    //normal pass req.session.user._id as code
     Image.getImagesByUser(/*req.user._id*/'5b1818145f2f3b51b3c5b0f4', function (err, images) {
         if (!images) {
             res.redirect('/');
@@ -47,6 +48,7 @@ function getData(res, images){
 
 async function sortData(res, data, images, i) {
     let uuidList = [];
+    
     if(data.length == 0) {
         //CASE :: NO DATA FOR IMAGE
         dataPackage.push({
@@ -101,8 +103,8 @@ async function sortData(res, data, images, i) {
                         console.log("Added instance info");
                     }
                     if(j == data.length - 1) {
-                        processBuckets(uuidList, threshold, function(){
-                            console.log("Bucket finished");
+                        processBuckets(uuidList, function(){
+                            console.log("Bucket finished after uuid create");
                             dataPackage.push({
                                 imageName: images[i].name,
                                 uuidList: uuidList,
@@ -122,13 +124,14 @@ async function sortData(res, data, images, i) {
             } else {
                 uuidList[pos].data.push(data[j]);
                 if(j == data.length - 1) {
-                    processBuckets(uuidList, threshold, function(){
-                        console.log("Bucket finished");
+                    processBuckets(uuidList, function(){
+                        console.log("Bucket finished after data push");
                         dataPackage.push({
                             imageName: images[i].name,
                             uuidList: uuidList,
                         });
                         ++itemsProcessed;
+                        console.log(itemsProcessed)
                         if(itemsProcessed == images.length){
                             console.log("Rendering!");
                             res.render('data', {
@@ -153,7 +156,8 @@ function compareTimes(a, b) {
   	return 0;
 }
 
-function processBuckets(uuidList, threshold, callback) {
+function processBuckets(uuidList, callback) {
+	let threshold = 20;
     console.log("moving to bucket processing");
     let multipleResponseTime = 5; //for resolution of instance death
     //now check which uuids are alive
@@ -223,6 +227,7 @@ function processBuckets(uuidList, threshold, callback) {
             }
             uuidList[i].btu_waste += (billed_time - (responseTime / uuidList[i].billing_unit)) * uuidList[i].price_hour;
         }
+        console.log(uuidList[i].cost_at_btu);
     }
     callback();
 }

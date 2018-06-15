@@ -97,6 +97,7 @@
 					bucket[location].data.push(image.uuidList[i].cost_at_btu[j]);
 				}
 			}
+			//console.log(bucket[0].data);
 			for(let i = 0; i < bucket.length; ++i) {
 				bucket[i].data.sort(compareTimes);
 				let btu_window = bucket[i].btu;
@@ -104,24 +105,31 @@
 				let cost = 0;
 				let location = traces.map(function(e) { return e.type; }).indexOf(bucket[i].type);
 				for(let j = 0; j < bucket[i].data.length; ++j) {
-					if(!btu_start){
+					console.log(bucket[i].data[j].time);
+					if(btu_start == 0){
 						btu_start = bucket[i].data[j].time;
 					}
-					if(bucket[i].data[j].time - btu_start < btu_window) {
-						cost += bucket[i].data[j].cost_at_time_point;
-					}
-					else {
+					if(bucket[i].data[j].time - btu_start >= btu_window) {
+						console.log("pushing " + cost);
 						traces[location].y.push(cost);
 						traces[location].x.push(toDateTime(btu_start + btu_window));
 						btu_start = bucket[i].data[j].time;
 						cost = 0;
 					}
+					cost += bucket[i].data[j].cost_at_time_point;
+					console.log("adding " + cost);
+				}
+				if(bucket[i].data[bucket[i].data.length - 1].time - btu_start >= btu_window) {
+					console.log("pushing " + cost);
+					traces[location].y.push(cost);
+					traces[location].x.push(toDateTime(btu_start + btu_window));
+					btu_start = bucket[i].data[j].time;
+					cost = 0;
 				}
 			}
 
 			return traces;
 		};
-
 		for(var i = 0; i < dataPackage.length; ++i) {
 			//FILLED AREA PLOT
 			if(dataPackage[i].uuidList.length) {
