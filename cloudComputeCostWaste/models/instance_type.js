@@ -14,7 +14,10 @@ var Instance_Type = module.exports = mongoose.model('Instance_Type', Instance_Ty
 module.exports.findInstance = function (id, callback)
 {
 	var id = mongoose.Types.ObjectId(id);
-	Instance_Type.findOne({ _id: id }, callback);
+	return new Promise((resolve, reject) => {
+		Instance_Type.findOne({ _id: id }, callback);
+		resolve(true);
+	});
 };
 
 module.exports.createOrUpdateInstance = function (id, type, locale, amount, callback){
