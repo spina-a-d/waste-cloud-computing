@@ -77,7 +77,13 @@ function CPU_usage(){
 }
 
 function send_data (){
-	return "0"
+	curl --fail --header "Content-Type: application/json" \
+	  	--header 'Expect:' \
+	  	--request POST \
+	  	--data "$1" \
+	  	"$DESTINATION/probePost"
+	res=$?
+	return $res
 }
 
 #sends json data via curl to the probePost
@@ -127,7 +133,6 @@ while [ true ]; do
 				"time":"'$TIME'",
 				"instance_type":"'$INSTANCE_TYPE'"
 			}'
-	echo "$MEMORY"
 	
 	send_data "$newData"
 	res=$?
