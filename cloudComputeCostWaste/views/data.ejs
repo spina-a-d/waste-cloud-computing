@@ -57,15 +57,6 @@
 		    return t;
 		};
 
-		function stackedArea(traces) {
-			for(var i = 1; i < traces.length; ++i) {
-				for(var j = 0; j < (Math.min(traces[i]['y'].length, traces[i-1]['y'].length)); ++j) {
-					traces[i]['y'][j] += traces[i - 1]['y'][j];
-				}
-			}
-			return traces;
-		};
-
 		function compareTimes(a, b) {
 			if (a.time < b.time)
 		    	return -1;
@@ -78,21 +69,22 @@
 			let traces = [];
 			let bucket = [];
 			for(let i = 0; i < image.uuidList.length; ++i) {
-				let type = image.uuidList[i].type;
-				if(traces.map(function(e) { return e.type; }).indexOf(type) < 0) { //don't already have this type so push it
+				let name = image.uuidList[i].type;
+				if(traces.map(function(e) { return e.name; }).indexOf(name) < 0) { //don't already have this type so push it
+					console.log("Found a new one " + name);
 					traces.push({
-						type: type,
+						name: name,
 						x: [],
 						y: [],
-						fill: 'tozeroy'
+						type: 'bar'
 					});
 					bucket.push({
-						type: type,
+						name: name,
 						btu: image.uuidList[i].billing_unit,
 						data: []
 					});
 				}
-				let location = bucket.map(function(e) { return e.type; }).indexOf(type);
+				let location = bucket.map(function(e) { return e.name; }).indexOf(name);
 				for(let j = 0; j < image.uuidList[i].cost_at_btu.length; ++j) {
 					bucket[location].data.push(image.uuidList[i].cost_at_btu[j]);
 				}
@@ -103,7 +95,8 @@
 				let btu_window = bucket[i].btu;
 				let btu_start = 0;
 				let cost = 0;
-				let location = traces.map(function(e) { return e.type; }).indexOf(bucket[i].type);
+				let location = traces.map(function(e) { return e.name; }).indexOf(bucket[i].name);
+				console.log(location);
 				for(let j = 0; j < bucket[i].data.length; ++j) {
 					console.log(bucket[i].data[j].time);
 					if(btu_start == 0){
@@ -112,7 +105,7 @@
 					if(bucket[i].data[j].time - btu_start >= btu_window) {
 						console.log("pushing " + cost);
 						traces[location].y.push(cost);
-						traces[location].x.push(toDateTime(btu_start + btu_window));
+						traces[location].x.push(toDateTime(btu_start - btu_window) + " until " + toDateTime(btu_start));
 						btu_start = bucket[i].data[j].time;
 						cost = 0;
 					}
@@ -131,11 +124,11 @@
 			return traces;
 		};
 		for(var i = 0; i < dataPackage.length; ++i) {
-			//FILLED AREA PLOT
+			//STACKED BAR PLOT
 			if(dataPackage[i].uuidList.length) {
 				var TESTER = document.getElementById(dataPackage[i].imageName);
 				var traces = generateAxis(dataPackage[i]);
-				Plotly.newPlot(TESTER, stackedArea(traces), {title: 'Cost per Instance Type over Time'});
+				Plotly.newPlot(TESTER, traces, {title: 'Cost per Instance Type per BTU', barmode: 'stack'});
 			}
 
 			for(var j = 0; j < dataPackage[i].uuidList.length; ++j) {

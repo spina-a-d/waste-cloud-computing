@@ -167,6 +167,13 @@ function processBuckets(uuidList, callback) {
         //needs to be sorted by time so window can be shifted along
         uuidList[i].data.sort(compareTimes);
         let btu_start = uuidList[i].data[0].time;
+        var date = new Date(btu_start*1000)
+        var hours = date.getHours();
+        var minutes = "0" + date.getMinutes();
+        var seconds = "0" + date.getSeconds();
+        var formattedTime = hours + ':' + minutes.substr(-2) + ':' + seconds.substr(-2);
+        console.log(formattedTime);
+
         let btu_waste_time = 0;
         for(let j = 1; j < uuidList[i].data.length; ++j) {
             ++currentWindowSize;
@@ -182,7 +189,7 @@ function processBuckets(uuidList, callback) {
                 		uuidList[i].cost += billed_time * uuidList[i].price_hour;
                         uuidList[i].cost_at_btu.push({
                             cost_at_time_point: uuidList[i].cost,
-                            time: uuidList[i].data[j].time
+                            time: btu_start + uuidList[i].billing_unit
                         });
                 		uuidList[i].btu_waste += (btu_waste_time / uuidList[i].billing_unit) * uuidList[i].price_hour;
                 		btu_start = uuidList[i].data[j].time;
