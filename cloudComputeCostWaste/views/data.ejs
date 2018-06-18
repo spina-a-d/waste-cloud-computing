@@ -71,7 +71,7 @@
 			for(let i = 0; i < image.uuidList.length; ++i) {
 				let name = image.uuidList[i].type;
 				if(traces.map(function(e) { return e.name; }).indexOf(name) < 0) { //don't already have this type so push it
-					console.log("Found a new one " + name);
+					//console.log("Found a new one " + name);
 					traces.push({
 						name: name,
 						x: [],
@@ -86,6 +86,7 @@
 				}
 				let location = bucket.map(function(e) { return e.name; }).indexOf(name);
 				for(let j = 0; j < image.uuidList[i].cost_at_btu.length; ++j) {
+					//console.log("pushed item to bucket");
 					bucket[location].data.push(image.uuidList[i].cost_at_btu[j]);
 				}
 			}
@@ -96,29 +97,29 @@
 				let btu_start = 0;
 				let cost = 0;
 				let location = traces.map(function(e) { return e.name; }).indexOf(bucket[i].name);
-				console.log(location);
+				//console.log(location);
 				for(let j = 0; j < bucket[i].data.length; ++j) {
-					console.log(bucket[i].data[j].time);
+					//console.log(bucket[i].data[j].time);
 					if(btu_start == 0){
 						btu_start = bucket[i].data[j].time;
 					}
 					if(bucket[i].data[j].time - btu_start >= btu_window) {
-						console.log("pushing " + cost);
+						//console.log("pushing " + toDateTime(btu_start));
 						traces[location].y.push(cost);
 						traces[location].x.push(toDateTime(btu_start - btu_window) + " until " + toDateTime(btu_start));
 						btu_start = bucket[i].data[j].time;
-						cost = 0;
+						//cost = 0;
 					}
 					cost += bucket[i].data[j].cost_at_time_point;
-					console.log("adding " + cost);
+					//console.log("adding " + cost);
 				}
-				if(bucket[i].data[bucket[i].data.length - 1].time - btu_start >= btu_window) {
-					console.log("pushing " + cost);
+				if(bucket[i].data[bucket[i].data.length - 1].time - btu_start <= btu_window) {
+					//console.log("pushing " + toDateTime(btu_start));
 					traces[location].y.push(cost);
-					traces[location].x.push(toDateTime(btu_start + btu_window));
-					btu_start = bucket[i].data[j].time;
-					cost = 0;
+					traces[location].x.push(toDateTime(btu_start - btu_window) + " until " + toDateTime(btu_start));
+					//cost = 0;
 				}
+				//console.log("pushing " + toDateTime(btu_start))
 			}
 
 			return traces;
@@ -128,7 +129,7 @@
 			if(dataPackage[i].uuidList.length) {
 				var TESTER = document.getElementById(dataPackage[i].imageName);
 				var traces = generateAxis(dataPackage[i]);
-				Plotly.newPlot(TESTER, traces, {title: 'Cost per Instance Type per BTU', barmode: 'stack'});
+				Plotly.newPlot(TESTER, traces, {title: 'Total Cost Accrued', barmode: 'stack'});
 			}
 
 			for(var j = 0; j < dataPackage[i].uuidList.length; ++j) {

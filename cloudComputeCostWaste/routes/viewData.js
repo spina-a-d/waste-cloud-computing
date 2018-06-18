@@ -32,14 +32,14 @@ function displayData(req, res) {
 
 function getData(res, images){
     for(let i = 0; i < images.length; ++i) {
-    	console.log("searching for data for images: " + images[i]._id);
+    	//console.log("searching for data for images: " + images[i]._id);
         Data.getDataByImage(images[i]._id, function(err, data) {
             if (err) {
                 console.log(err);
                 res.redirect('/');
             }
 
-            console.log("About to process data");
+            //console.log("About to process data");
             //sorting the data into uuid buckets
             sortData(res, data, images, i);
         });
@@ -57,7 +57,7 @@ async function sortData(res, data, images, i) {
         });
         ++itemsProcessed;
         if(itemsProcessed == images.length){
-            console.log("Rendering!");
+            //console.log("Rendering!");
             res.render('data', {
                 dataPackage: dataPackage
             });
@@ -89,7 +89,7 @@ async function sortData(res, data, images, i) {
                         data: [data[j]],
                         cost_at_btu: []
                     });
-                    console.log("pushed a uuid");
+                    //console.log("pushed a uuid");
                     if(instance != null) {
                         uuidList[uuidList.length - 1].provider = instance._provider;
                         uuidList[uuidList.length - 1].type = instance.type;
@@ -100,18 +100,18 @@ async function sortData(res, data, images, i) {
                             uuidList[uuidList.length - 1].billing_unit = 3600;
                         }
                         uuidList[uuidList.length - 1].price_hour = instance.price_hour;
-                        console.log("Added instance info");
+                        //console.log("Added instance info");
                     }
                     if(j == data.length - 1) {
                         processBuckets(uuidList, function(){
-                            console.log("Bucket finished after uuid create");
+                            //console.log("Bucket finished after uuid create");
                             dataPackage.push({
                                 imageName: images[i].name,
                                 uuidList: uuidList,
                             });
                             ++itemsProcessed;
                             if(itemsProcessed == images.length){
-                                console.log("Rendering!");
+                                //console.log("Rendering!");
                                 res.render('data', {
                                     dataPackage: dataPackage
                                 });
@@ -125,7 +125,7 @@ async function sortData(res, data, images, i) {
                 uuidList[pos].data.push(data[j]);
                 if(j == data.length - 1) {
                     processBuckets(uuidList, function(){
-                        console.log("Bucket finished after data push");
+                        //console.log("Bucket finished after data push");
                         dataPackage.push({
                             imageName: images[i].name,
                             uuidList: uuidList,
@@ -133,7 +133,7 @@ async function sortData(res, data, images, i) {
                         ++itemsProcessed;
                         console.log(itemsProcessed)
                         if(itemsProcessed == images.length){
-                            console.log("Rendering!");
+                            //console.log("Rendering!");
                             res.render('data', {
                                 dataPackage: dataPackage
                             });
@@ -157,8 +157,8 @@ function compareTimes(a, b) {
 }
 
 function processBuckets(uuidList, callback) {
-	let threshold = 20;
-    console.log("moving to bucket processing");
+	let threshold = 8;
+    //console.log("moving to bucket processing");
     let multipleResponseTime = 5; //for resolution of instance death
     //now check which uuids are alive
     for(let i = 0; i < uuidList.length; ++i) {
@@ -167,12 +167,6 @@ function processBuckets(uuidList, callback) {
         //needs to be sorted by time so window can be shifted along
         uuidList[i].data.sort(compareTimes);
         let btu_start = uuidList[i].data[0].time;
-        var date = new Date(btu_start*1000)
-        var hours = date.getHours();
-        var minutes = "0" + date.getMinutes();
-        var seconds = "0" + date.getSeconds();
-        var formattedTime = hours + ':' + minutes.substr(-2) + ':' + seconds.substr(-2);
-        console.log(formattedTime);
 
         let btu_waste_time = 0;
         for(let j = 1; j < uuidList[i].data.length; ++j) {
@@ -184,11 +178,11 @@ function processBuckets(uuidList, callback) {
                 if(uuidList[i].billing_unit != null && 
                     uuidList[i].price_hour != null) {
                 	if((uuidList[i].data[j].time - btu_start) > uuidList[i].billing_unit) {
-                		console.log("BTU ended");
+                		//console.log("BTU ended");
                 		let billed_time = 1.0; //non-magic number, add 1 btu for the closed btu
                 		uuidList[i].cost += billed_time * uuidList[i].price_hour;
                         uuidList[i].cost_at_btu.push({
-                            cost_at_time_point: uuidList[i].cost,
+                            cost_at_time_point: uuidList[i].price_hour,
                             time: btu_start + uuidList[i].billing_unit
                         });
                 		uuidList[i].btu_waste += (btu_waste_time / uuidList[i].billing_unit) * uuidList[i].price_hour;
@@ -222,19 +216,19 @@ function processBuckets(uuidList, callback) {
         }
         if(uuidList[i].billing_unit != null && 
             uuidList[i].price_hour != null) {
-        	console.log("Final Cost addition");
+        	//console.log("Final Cost addition");
             let billed_time = Math.ceil((uuidList[i].data[uuidList[i].data.length - 1].time - btu_start) / uuidList[i].billing_unit);
-            console.log("time added " + billed_time);
+            //console.log("time added " + billed_time);
             uuidList[i].cost += billed_time * uuidList[i].price_hour;
             for(let k = 0; k < billed_time; ++k) {
                 uuidList[i].cost_at_btu.push({
-                    cost_at_time_point: uuidList[i].cost,
+                    cost_at_time_point: uuidList[i].price_hour,
                     time: btu_start + ((k + 1) * uuidList[i].billing_unit)
                 });
             }
             uuidList[i].btu_waste += (billed_time - (responseTime / uuidList[i].billing_unit)) * uuidList[i].price_hour;
         }
-        console.log(uuidList[i].cost_at_btu);
+        //console.log(uuidList[i].cost_at_btu);
     }
     callback();
 }
