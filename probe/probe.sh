@@ -1,4 +1,7 @@
 #!/bin/bash
+
+#https://unix.stackexchange.com/questions/119126/command-to-display-memory-usage-disk-usage-and-cpu-load
+
 ##CONFIG##
 USER_ID="5b1818145f2f3b51b3c5b0f4" #Probably not necessary and will probably be removed
 APP_TOKEN="5b1b97d039cabc0fe281c6bf" #Token provided which uniquely identifies application
@@ -36,7 +39,7 @@ function CPU_usage(){
 	    let "DIFF_TOTAL=$TOTAL-${PREV_TOTAL[0]}"
 	    let "DIFF_USAGE=(1000*($DIFF_TOTAL-$DIFF_IDLE)/($DIFF_TOTAL+5))/10"
 	    let "SUM=$SUM+$DIFF_USAGE"
-	    
+
 	    # Remember the total and idle CPU times for the next check.
 	    PREV_TOTAL[0]="$TOTAL"
 	    PREV_IDLE[0]="$IDLE"
@@ -69,24 +72,18 @@ function CPU_usage(){
 	    let "SLEEP_TIME=($1-1)/3"
 	    sleep "$SLEEP_TIME"
 	done  
+	let "TOTAL_CPU_USAGE=$TOTAL_CPU_USAGE/3"
 	return $TOTAL_CPU_USAGE
 }
 
 function send_data (){
-	curl --fail --header "Content-Type: application/json" \
-	  	--header 'Expect:' \
-	  	--request POST \
-	  	--data "$1" \
-	  	"$DESTINATION/probePost"
-	res=$?
-	return $res
+	return "0"
 }
 
 #sends json data via curl to the probePost
 while [ true ]; do
 	sleep 1
 	filename="tempStorage.json"
-	echo "Reading from Storage:" #Cleanup old data that wasn't sent
 	fail=0
 	lineNumber=1
 	while read -r line
@@ -106,12 +103,11 @@ while [ true ]; do
 	done < "$filename"
 	#Clear the deleted lines at the end
 	sed -i '/^\s*$/d' "$filename"
-	echo "$fail transfers failed."
 
 	#Gather new data
 	memFree=$(awk '/MemFree/ {printf( "%f\n", $2)}' /proc/meminfo)
     memTotal=$(awk '/MemTotal/ {printf( "%f\n", $2 )}' /proc/meminfo)
-    MEMORY=$(awk "BEGIN {printf \"%.2f\",(${memTotal}-${memFree})/${memTotal}*100}")
+    MEMORY=$(free -m | awk 'NR==2{printf "%.2f",$3*100/$2 }') #Shows memory usage without buff/cache included
     diskSize=$(df --output=size -B 1 "$PWD" |tail -n 1)
     diskUsed=$(df --output=used -B 1 "$PWD" |tail -n 1)
     DISK=$(awk "BEGIN {printf \"%.2f\",${diskUsed}/${diskSize}*100}")
@@ -131,7 +127,8 @@ while [ true ]; do
 				"time":"'$TIME'",
 				"instance_type":"'$INSTANCE_TYPE'"
 			}'
-
+	echo "$MEMORY"
+	
 	send_data "$newData"
 	res=$?
 
