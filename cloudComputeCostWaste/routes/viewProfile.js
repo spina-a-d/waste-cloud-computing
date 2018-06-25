@@ -1,5 +1,6 @@
 var express = require('express');
 var path = require('path');
+var fs = require('fs');
 var router = express.Router();
 
 var User = require('../models/user');
@@ -70,6 +71,18 @@ router.post('/', function(req, res, next) {
 				        }
 			        });
 			        break;
+			    case "download":
+			    	console.log("Downloading Probe");
+			    	res.download('../probe/probe.sh');
+			    	/*fs.readFile("../probe/probeStart.sh", "utf8", function(err, data) {
+			    		//let config = "USER_ID=" + req.user._id +
+			    					APP_TOKEN;
+			    		data.concat();
+
+			    		console.log(data);
+			    		//res.download('probe.sh');
+			    	});*/
+			    	break;
 			    default:
 			    	console.log("Error: action_path invalid");
 			        break;
