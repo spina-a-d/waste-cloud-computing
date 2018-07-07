@@ -1,7 +1,7 @@
 var express = require('express');
 var path = require('path');
-var fs = require('fs');
 var router = express.Router();
+var url = require('url');
 
 var User = require('../models/user');
 var Image = require('../models/image');
@@ -49,10 +49,11 @@ router.post('/', function(req, res, next) {
 			}
 	        break;
 	    case "image":
+	    	let id = "";
 	        switch(action_path[1]) {
 			    case "create":
-			    	let id = "name" + action_path[2];
-			        console.log("creating " + req.body[id]);
+			    	id = "name" + action_path[2];
+			        console.log("Creating " + req.body[id]);
 			       	Image.addData(req.body[id], action_path[2], req.user._id, function (err) {
 						if (err) {
 				            console.log(err);
@@ -62,7 +63,7 @@ router.post('/', function(req, res, next) {
 			        });
 			        break;
 			    case "delete":
-			        console.log("deleting " + action_path[2]);
+			        console.log("Deleting " + action_path[2]);
 			        Image.delete(action_path[2], function (err) {
 						if (err) {
 				            console.log(err);
@@ -72,16 +73,15 @@ router.post('/', function(req, res, next) {
 			        });
 			        break;
 			    case "download":
-			    	console.log("Downloading Probe");
-			    	res.download('../probe/probe.sh');
-			    	/*fs.readFile("../probe/probeStart.sh", "utf8", function(err, data) {
-			    		//let config = "USER_ID=" + req.user._id +
-			    					APP_TOKEN;
-			    		data.concat();
-
-			    		console.log(data);
-			    		//res.download('probe.sh');
-			    	});*/
+			    	id = "name" + action_path[2];
+			        console.log("Transfering to Download " + action_path[1] + " " + action_path[2]);
+			    	res.redirect(url.format({
+				        pathname:"/createImage",
+				        query: {
+				        	req_id: req.body[id],
+				          	image : action_path[2]
+				        }
+				    }));
 			    	break;
 			    default:
 			    	console.log("Error: action_path invalid");

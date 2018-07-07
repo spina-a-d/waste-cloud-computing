@@ -57,4 +57,4 @@ module.exports.createOrUpdateInstance = function (id, type, locale, amount, call
 	    	console.log(err);
 	    }
 	});
-}
+};

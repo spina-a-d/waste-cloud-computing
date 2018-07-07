@@ -4,7 +4,6 @@
 
 ##CONFIG##
 USER_ID="5b1818145f2f3b51b3c5b0f4" #Probably not necessary and will probably be removed
-APP_TOKEN="5b315afde7e2d64d7a9e9971" #Token provided which uniquely identifies application
 IMAGE_TOKEN="5b315b04e7e2d64d7a9e9972" #Token provided which uniquely identifies image
 DESTINATION="ec2-18-185-112-82.eu-central-1.compute.amazonaws.com:3000"
 PORT=3000 #Port on which app traffic takes place
@@ -123,8 +122,7 @@ while [ true ]; do
     TIME=$(date +%s)
 
 	#This is where new data will be extracted and sent
-	newData='{"oauthid": "'$USER_ID'", 
-				"app":"'$APP_TOKEN'", 
+	newData='{"oauthid": "'$USER_ID'",
 				"image":"'$IMAGE_TOKEN'",  
 				"uuid":"'$UUID'", 
 				"cpu":"'$CPU'", 
