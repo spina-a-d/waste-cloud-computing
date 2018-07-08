@@ -34,7 +34,7 @@ while [ true ]; do
     DISK=9
     CPU=9
     UUID="sdfklj;asdf"
-    TIME=$(date +%s)
+    TIME=0
 
 	#This is where new data will be extracted and sent
 	newData='{"oauthid": "'$USER_ID'",
