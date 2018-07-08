@@ -19,8 +19,8 @@ CPU_usage(){
 	let "TOTAL_CPU=$TOTAL_CPU - 1"
 
 	#declare array of size TOTAL_CPU to store values (eg. 8 cpus makes arrays of size 8)
-	declare -a PREV_TOTAL=( $(for i in ${range[@]}; do echo 0; done) )
-	declare -a PREV_IDLE=( $(for i in ${range[@]}; do echo 0; done) )
+	declare -a PREV_TOTAL=( $(for i in $(seq 0 $TOTAL_CPU); do echo 0; done) )
+	declare -a PREV_IDLE=( $(for i in $(seq 0 $TOTAL_CPU); do echo 0; done) )
 
 	for i in {1..3}; do
 	    SUM=0
