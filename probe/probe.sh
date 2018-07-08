@@ -5,9 +5,9 @@
 ##CONFIG##
 USER_ID="5b1818145f2f3b51b3c5b0f4" #Probably not necessary and will probably be removed
 IMAGE_TOKEN="5b315b04e7e2d64d7a9e9972" #Token provided which uniquely identifies image
-DESTINATION="ec2-18-185-112-82.eu-central-1.compute.amazonaws.com:3000"
+DESTINATION="http://www.universalcloudmonitoring.com"
 PORT=3000 #Port on which app traffic takes place
-PING_RATE=2 #how long between probe pings (use at least 1)
+PING_RATE=3 #how long between probe pings (use at least 1)
 #IF on public cloud 
 INSTANCE_TYPE="5b1ece31617c3e4c95151ed8"
 
