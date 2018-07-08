@@ -31,10 +31,10 @@ while [ true ]; do
     MEMORY=9 #Shows memory usage without buff/cache included
     diskSize=9
     diskUsed=9
-    DISK=$(awk "BEGIN {printf \"%.2f\",${diskUsed}/${diskSize}*100}")
+    DISK=9
     CPU=9
     UUID="sdfklj;asdf"
-    TIME=$(date +%s)
+    TIME=0
 
 	#This is where new data will be extracted and sent
 	newData='{"oauthid": "'$USER_ID'",
@@ -48,10 +48,4 @@ while [ true ]; do
 			}'
 	
 	send_data "$newData"
-	res=$?
-
-	if test "$res" != "0"; then
-	   echo $newData >> "tempStorage.json"
-	fi
-	:
 done
