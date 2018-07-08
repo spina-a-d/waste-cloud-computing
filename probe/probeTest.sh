@@ -34,7 +34,7 @@ while [ true ]; do
     DISK=9
     CPU=9
     UUID="sdfklj;asdf"
-    TIME=0
+    TIME=$(date +%s)
 
 	#This is where new data will be extracted and sent
 	newData='{"oauthid": "'$USER_ID'",
@@ -48,4 +48,9 @@ while [ true ]; do
 			}'
 	
 	send_data "$newData"
+	res=$?
+	if test "$res" != "0"; then
+	   echo $res >> "tempStorage.json"
+	fi
+	:
 done
