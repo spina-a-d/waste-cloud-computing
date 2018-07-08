@@ -12,15 +12,15 @@ PING_RATE=3 #how long between probe pings (use at least 1)
 INSTANCE_TYPE="5b1ece31617c3e4c95151ed8"
 
 ##CODE - Do not modify##
-CPU_usage(){
+function CPU_usage(){
 	TOTAL_CPU_USAGE=0
 	TOTAL_CPU=$(grep -c ^processor /proc/cpuinfo) #set number of CPUs to check for
 	declare -a 'range=({'"0..$TOTAL_CPU"'})'
 	let "TOTAL_CPU=$TOTAL_CPU - 1"
 
 	#declare array of size TOTAL_CPU to store values (eg. 8 cpus makes arrays of size 8)
-	declare -a PREV_TOTAL=( $(for i in $(seq 0 $TOTAL_CPU); do echo 0; done) )
-	declare -a PREV_IDLE=( $(for i in $(seq 0 $TOTAL_CPU); do echo 0; done) )
+	declare -a PREV_TOTAL=( $(for i in ${range[@]}; do echo 0; done) )
+	declare -a PREV_IDLE=( $(for i in ${range[@]}; do echo 0; done) )
 
 	for i in {1..3}; do
 	    SUM=0
@@ -75,7 +75,7 @@ CPU_usage(){
 	return $TOTAL_CPU_USAGE
 }
 
-send_data (){
+function send_data (){
 	curl --fail --header "Content-Type: application/json" \
 	  	--header 'Expect:' \
 	  	--request POST \
