@@ -12,7 +12,7 @@ PING_RATE=3 #how long between probe pings (use at least 1)
 INSTANCE_TYPE="5b1ece31617c3e4c95151ed8"
 
 ##CODE - Do not modify##
-function CPU_usage(){
+CPU_usage(){
 	TOTAL_CPU_USAGE=0
 	TOTAL_CPU=$(grep -c ^processor /proc/cpuinfo) #set number of CPUs to check for
 	declare -a 'range=({'"0..$TOTAL_CPU"'})'
@@ -75,7 +75,7 @@ function CPU_usage(){
 	return $TOTAL_CPU_USAGE
 }
 
-function send_data (){
+send_data (){
 	curl --fail --header "Content-Type: application/json" \
 	  	--header 'Expect:' \
 	  	--request POST \
