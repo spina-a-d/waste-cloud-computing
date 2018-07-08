@@ -11,7 +11,7 @@ PING_RATE=3 #how long between probe pings (use at least 1)
 #IF on public cloud 
 INSTANCE_TYPE="5b1ece31617c3e4c95151ed8"
 
-function send_data (){
+send_data(){
 	curl --fail --header "Content-Type: application/json" \
 	  	--header 'Expect:' \
 	  	--request POST \
