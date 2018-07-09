@@ -7,7 +7,7 @@ USER_ID="5b1818145f2f3b51b3c5b0f4" #Probably not necessary and will probably be 
 IMAGE_TOKEN="5b40f095193cc743cfe8dc22" #Token provided which uniquely identifies image
 DESTINATION="http://www.universalcloudmonitoring.com"
 PORT=3000 #Port on which app traffic takes place
-PING_RATE=3 #how long between probe pings (use at least 1)
+PING_RATE=5 #how long between probe pings (use at least 1)
 #IF on public cloud 
 INSTANCE_TYPE="5b1ece31617c3e4c95151ed8"
 

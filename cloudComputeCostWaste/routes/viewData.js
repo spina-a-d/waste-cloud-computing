@@ -174,9 +174,9 @@ function processBuckets(uuidList, callback) {
         let btu_waste_time = 0;
         for(let j = 1; j < uuidList[i].data.length; ++j) {
             ++currentWindowSize;
-            uuidList[i].avgCPU += data[i].cpu;
-            uuidList[i].avgMEM += data[i].mem;
-            uuidList[i].avgDISK += data[i].disk;
+            uuidList[i].avgCPU += uuidList[i].data[j].cpu;
+            uuidList[i].avgMEM += uuidList[i].data[j].mem;
+            uuidList[i].avgDISK += uuidList[i].data[j].disk;
             //check average response time
             avgResponseTime = Math.ceil(responseTime / currentWindowSize);
             if(responseTime != 0 && //dead in this window reset
