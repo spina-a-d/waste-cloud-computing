@@ -87,7 +87,10 @@ async function sortData(res, data, images, i) {
                         billing_unit: null,
                         price_hour: null,
                         data: [data[j]],
-                        cost_at_btu: []
+                        cost_at_btu: [],
+                        avgCPU: 0,
+                        avgMEM: 0,
+                        avgDISK: 0
                     });
                     //console.log("pushed a uuid");
                     if(instance != null) {
@@ -171,6 +174,9 @@ function processBuckets(uuidList, callback) {
         let btu_waste_time = 0;
         for(let j = 1; j < uuidList[i].data.length; ++j) {
             ++currentWindowSize;
+            uuidList[i].avgCPU += data[i].cpu;
+            uuidList[i].avgMEM += data[i].mem;
+            uuidList[i].avgDISK += data[i].disk;
             //check average response time
             avgResponseTime = Math.ceil(responseTime / currentWindowSize);
             if(responseTime != 0 && //dead in this window reset
@@ -228,8 +234,11 @@ function processBuckets(uuidList, callback) {
             }
             uuidList[i].btu_waste += (billed_time - (responseTime / uuidList[i].billing_unit)) * uuidList[i].price_hour;
         }
-        //console.log(uuidList[i].cost_at_btu);
+        uuidList[i].avgCPU /= uuidList[i].data.length;
+        uuidList[i].avgMEM /= uuidList[i].data.length;
+        uuidList[i].avgDISK /= uuidList[i].data.length;
     }
+
     callback();
 }
 

@@ -38,6 +38,9 @@
 						    				* dataPackage[i].uuidList[j].price_hour + 
 						    				dataPackage[i].uuidList[j].btu_waste).toFixed(4)) %>$ <p>
 					    			<% } %>
+					    			<p>Average CPU Usage:<%- dataPackage[i].uuidList[j].avgCPU %></p>
+					    			<p>Average MEMORY Usage:<%- dataPackage[i].uuidList[j].avgMEM %></p>
+					    			<p>Average DISK Usage:<%- dataPackage[i].uuidList[j].avgDISK %></p>
 		                    	</ul>
 		                    	<div id="<%- dataPackage[i].uuidList[j].uuid %>util" style="height:250px;"></div>
 		                    	<br>
