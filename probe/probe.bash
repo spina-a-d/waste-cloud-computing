@@ -1,11 +1,12 @@
 #!/bin/bash
 
+##CONFIG##
 USER_ID=5b1818145f2f3b51b3c5b0f4
 IMAGE_TOKEN=5b461dea998e275f28faba88
-DESTINATION=localhost:3000
+DESTINATION="http://www.universalcloudmonitoring.com"
 PORT=3000
 PING_RATE=5
-INSTANCE_TYPE=5b1ecf446bcc0a4d5d81ae29
+INSTANCE_TYPE=5b1ecf3c6bcc0a4d5d81aab7
 
 ##CODE - Do not modify##
 function CPU_usage(){
@@ -57,7 +58,7 @@ function CPU_usage(){
 	        let "DIFF_TOTAL=$TOTAL-${PREV_TOTAL[$i]:-0}"
 	        let "DIFF_USAGE=(1000*($DIFF_TOTAL-$DIFF_IDLE)/($DIFF_TOTAL+5))/10"
 	        let "SUM=$SUM+$DIFF_USAGE"
-
+            echo "This should not be seen"
 	        # Remember the total and idle CPU times for the next check.
 	        PREV_TOTAL[$i]="$TOTAL"
 	        PREV_IDLE[$i]="$IDLE"

@@ -73,7 +73,7 @@ router.post('/', checkAuthentication, function(req, res, next) {
 			let config = (
 						"USER_ID=" + req.user._id + '\n' + 
 						"IMAGE_TOKEN=" + req.query.image + '\n' + 
-						"DESTINATION=" + "localhost:3000" + '\n' +  //replace with final ip
+						"DESTINATION=" + "http://www.universalcloudmonitoring.com/" + '\n' +  //replace with final ip
 						"PORT=" + req.body.port + '\n' + 
 						"PING_RATE=" + req.body.ping + '\n' + 
 						"INSTANCE_TYPE=" + instance[0]._id + '\n'

@@ -109,8 +109,7 @@ while [ true ]; do
     TIME=$(date +%s)
 
 	#This is where new data will be extracted and sent
-	newData='{"oauthid": "'$USER_ID'", 
-				"app":"'$APP_TOKEN'", 
+	newData='{"oauthid": "'$USER_ID'",
 				"image":"'$IMAGE_TOKEN'",  
 				"uuid":"'$UUID'", 
 				"cpu":"'$CPU'", 
