@@ -40,31 +40,32 @@ function CPU_usage(){
 	    # Remember the total and idle CPU times for the next check.
 	    PREV_TOTAL[0]="$TOTAL"
 	    PREV_IDLE[0]="$IDLE"
+        if test "$TOTAL_CPU" != "0"; then
+	        # Wait before checking again.
+	        declare -a 'range=({'"1..$TOTAL_CPU"'})'
+	        for j in ${range[@]};do 
+	            CPU=(`cat /proc/stat | grep "^cpu$j "`) # Get the total CPU statistics.
+                echo $CPU
+	            unset CPU[0]                            # Discard the "cpu" prefix.
+	            IDLE=${CPU[4]}                          # Get the idle CPU time.
 
-	    # Wait before checking again.
-	    declare -a 'range=({'"1..$TOTAL_CPU"'})'
-	    for j in ${range[@]};do 
-	        CPU=(`cat /proc/stat | grep "^cpu$j "`) # Get the total CPU statistics.
-            echo $CPU
-	        unset CPU[0]                            # Discard the "cpu" prefix.
-	        IDLE=${CPU[4]}                          # Get the idle CPU time.
+	            # Calculate the total CPU time
+	            TOTAL=0
+	            for VALUE in "${CPU[@]}"; do
+	                let "TOTAL=$TOTAL+$VALUE"
+	            done
 
-	        # Calculate the total CPU time.
-	        TOTAL=0
-	        for VALUE in "${CPU[@]}"; do
-	            let "TOTAL=$TOTAL+$VALUE"
+	            # Calculate the CPU usage since we last checked.
+	            let "DIFF_IDLE=$IDLE-${PREV_IDLE[$j]:-0}"
+	            let "DIFF_TOTAL=$TOTAL-${PREV_TOTAL[$j]:-0}"
+	            let "DIFF_USAGE=(1000*($DIFF_TOTAL-$DIFF_IDLE)/($DIFF_TOTAL+5))/10"
+	            let "SUM=$SUM+$DIFF_USAGE"
+                echo "This should not be seen"
+	            # Remember the total and idle CPU times for the next check.
+	            PREV_TOTAL[$j]="$TOTAL"
+	            PREV_IDLE[$j]="$IDLE"
 	        done
-
-	        # Calculate the CPU usage since we last checked.
-	        let "DIFF_IDLE=$IDLE-${PREV_IDLE[$j]:-0}"
-	        let "DIFF_TOTAL=$TOTAL-${PREV_TOTAL[$j]:-0}"
-	        let "DIFF_USAGE=(1000*($DIFF_TOTAL-$DIFF_IDLE)/($DIFF_TOTAL+5))/10"
-	        let "SUM=$SUM+$DIFF_USAGE"
-            echo "This should not be seen"
-	        # Remember the total and idle CPU times for the next check.
-	        PREV_TOTAL[$j]="$TOTAL"
-	        PREV_IDLE[$j]="$IDLE"
-	    done
+        fi
 	    let "SUM=$SUM/($TOTAL_CPU+1)"
 	    let "TOTAL_CPU_USAGE=$TOTAL_CPU_USAGE+$SUM"
 	    let "SLEEP_TIME=($1-1)/3"
@@ -134,9 +135,9 @@ while [ true ]; do
 	
 	send_data "$newData"
 	res=$?
-
-	if test "$res" != "0"; then
+if test "$res" != "0"; then
 	   echo $newData >> "tempStorage.json"
 	fi
+	
 	:
 done
