@@ -21,8 +21,7 @@ function CPU_usage(){
 
 	for i in {1..3}; do
 	    SUM=0
-	    CPU=(`cat /proc/stat | grep '^cpu '`) # Get the total CPU statistics.
-        cat /proc/stat | grep "^cpu"	    
+	    CPU=(`cat /proc/stat | grep '^cpu '`) # Get the total CPU statistics.    
         unset CPU[0]                          # Discard the "cpu" prefix.
 	    IDLE=${CPU[4]}                        # Get the idle CPU time.
 
@@ -45,7 +44,6 @@ function CPU_usage(){
 	        declare -a 'range=({'"1..$TOTAL_CPU"'})'
 	        for j in ${range[@]};do 
 	            CPU=(`cat /proc/stat | grep "^cpu$j "`) # Get the total CPU statistics.
-                echo $CPU
 	            unset CPU[0]                            # Discard the "cpu" prefix.
 	            IDLE=${CPU[4]}                          # Get the idle CPU time.
 
@@ -60,7 +58,6 @@ function CPU_usage(){
 	            let "DIFF_TOTAL=$TOTAL-${PREV_TOTAL[$j]:-0}"
 	            let "DIFF_USAGE=(1000*($DIFF_TOTAL-$DIFF_IDLE)/($DIFF_TOTAL+5))/10"
 	            let "SUM=$SUM+$DIFF_USAGE"
-                echo "This should not be seen"
 	            # Remember the total and idle CPU times for the next check.
 	            PREV_TOTAL[$j]="$TOTAL"
 	            PREV_IDLE[$j]="$IDLE"
