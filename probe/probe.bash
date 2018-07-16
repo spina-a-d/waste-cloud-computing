@@ -21,54 +21,33 @@ function CPU_usage(){
 
 	for i in {1..3}; do
 	    SUM=0
-	    CPU=(`cat /proc/stat | grep '^cpu '`) # Get the total CPU statistics.    
-        unset CPU[0]                          # Discard the "cpu" prefix.
-	    IDLE=${CPU[4]}                        # Get the idle CPU time.
+        declare -a 'range=({'"0..$TOTAL_CPU"'})'
+        for j in ${range[@]};do 
+            CPU=(`cat /proc/stat | grep "^cpu$j "`) # Get the total CPU statistics.
+            unset CPU[0]                            # Discard the "cpu" prefix.
+            IDLE=${CPU[4]}                          # Get the idle CPU time.
 
-	    # Calculate the total CPU time.
-	    TOTAL=0
-	    for VALUE in "${CPU[@]}"; do
-	        let "TOTAL=$TOTAL+$VALUE"
-	    done
-	    # Calculate the CPU usage since we last checked.
-	    let "DIFF_IDLE=$IDLE-${PREV_IDLE[0]}"
-	    let "DIFF_TOTAL=$TOTAL-${PREV_TOTAL[0]}"
-	    let "DIFF_USAGE=(1000*($DIFF_TOTAL-$DIFF_IDLE)/($DIFF_TOTAL+5))/10"
-	    let "SUM=$SUM+$DIFF_USAGE"
+            # Calculate the total CPU time
+            TOTAL=0
+            for VALUE in "${CPU[@]}"; do
+                let "TOTAL=$TOTAL+$VALUE"
+            done
 
-	    # Remember the total and idle CPU times for the next check.
-	    PREV_TOTAL[0]="$TOTAL"
-	    PREV_IDLE[0]="$IDLE"
-        if test "$TOTAL_CPU" != "0"; then
-	        # Wait before checking again.
-	        declare -a 'range=({'"1..$TOTAL_CPU"'})'
-	        for j in ${range[@]};do 
-	            CPU=(`cat /proc/stat | grep "^cpu$j "`) # Get the total CPU statistics.
-	            unset CPU[0]                            # Discard the "cpu" prefix.
-	            IDLE=${CPU[4]}                          # Get the idle CPU time.
-
-	            # Calculate the total CPU time
-	            TOTAL=0
-	            for VALUE in "${CPU[@]}"; do
-	                let "TOTAL=$TOTAL+$VALUE"
-	            done
-
-	            # Calculate the CPU usage since we last checked.
-	            let "DIFF_IDLE=$IDLE-${PREV_IDLE[$j]:-0}"
-	            let "DIFF_TOTAL=$TOTAL-${PREV_TOTAL[$j]:-0}"
-	            let "DIFF_USAGE=(1000*($DIFF_TOTAL-$DIFF_IDLE)/($DIFF_TOTAL+5))/10"
-	            let "SUM=$SUM+$DIFF_USAGE"
-	            # Remember the total and idle CPU times for the next check.
-	            PREV_TOTAL[$j]="$TOTAL"
-	            PREV_IDLE[$j]="$IDLE"
-	        done
-        fi
+            # Calculate the CPU usage since we last checked.
+            let "DIFF_IDLE=$IDLE-${PREV_IDLE[$j]:-0}"
+            let "DIFF_TOTAL=$TOTAL-${PREV_TOTAL[$j]:-0}"
+            let "DIFF_USAGE=(1000*($DIFF_TOTAL-$DIFF_IDLE)/($DIFF_TOTAL+5))/10"
+            let "SUM=$SUM+$DIFF_USAGE"
+            # Remember the total and idle CPU times for the next check.
+            PREV_TOTAL[$j]="$TOTAL"
+            PREV_IDLE[$j]="$IDLE"
+        done
 	    let "SUM=$SUM/($TOTAL_CPU+1)"
 	    let "TOTAL_CPU_USAGE=$TOTAL_CPU_USAGE+$SUM"
-	    let "SLEEP_TIME=($1-1)/3"
-	    sleep "$SLEEP_TIME"
+	    sleep 1
 	done  
 	let "TOTAL_CPU_USAGE=$TOTAL_CPU_USAGE/3"
+    echo $TOTAL_CPU_USAGE
 	return $TOTAL_CPU_USAGE
 }
 
@@ -113,7 +92,7 @@ while [ true ]; do
     diskSize=$(df --output=size -B 1 "$PWD" |tail -n 1)
     diskUsed=$(df --output=used -B 1 "$PWD" |tail -n 1)
     DISK=$(awk "BEGIN {printf \"%.2f\",${diskUsed}/${diskSize}*100}")
-    CPU_usage "$PING_RATE"
+    CPU_usage
     CPU=$?
     UUID=$(dmidecode | grep -i uuid | awk '{print $2}' | tr '[:upper:]' '[:lower:]')
     TIME=$(date +%s)
@@ -138,3 +117,4 @@ if test "$res" != "0"; then
 	
 	:
 done
+
