@@ -75,7 +75,7 @@ while [ true ]; do
 	    res=$?
 
 		if test "$res" != "0"; then
-		   let "fail++"
+		   break
 		else
 			#delete lines of data already transfered
 			sed -i "$lineNumber"'s/.*//' "$filename"
