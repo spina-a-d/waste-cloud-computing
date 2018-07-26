@@ -10,7 +10,7 @@ var itemsProcessed = 0;
 var dataPackage = [];
 
 /* GET home page. */
-router.get('/', /*checkAuthentication,*/ function(req, res, next) {
+router.get('/', checkAuthentication, function(req, res, next) {
 	displayData(req, res);
 });
 
@@ -18,8 +18,8 @@ function displayData(req, res) {
 	itemsProcessed = 0;
 	dataPackage = [];
 
-    //normal pass req.session.user._id as code
-    Image.getImagesByUser(/*req.user._id*/'5b1818145f2f3b51b3c5b0f4', function (err, images) {
+    //normally pass req.user._id as code, but a user id for testing is left in the comments
+    Image.getImagesByUser(req.user._id /*'5b1818145f2f3b51b3c5b0f4'*/, function (err, images) {
         if (!images) {
             res.redirect('/');
         } else if (err) {
