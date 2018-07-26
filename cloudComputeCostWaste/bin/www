@@ -6,20 +6,26 @@
 
 var app = require('../app');
 var debug = require('debug')('cloudcomputecostwaste:server');
-var http = require('http');
+var https = require('https');
+var fs = require('fs');
+const options = {
+  key: fs.readFileSync("./ssl/universalcloudmonitoring.pem"),
+  cert: fs.readFileSync("./ssl/www_universalcloudmonitoring_com.crt"),
+  chain: fs.readfileSync("./ssl/www_universalcloudmonitoring_com.ca-bundle")
+};
 
 /**
  * Get port from environment and store in Express.
  */
 
-var port = normalizePort(process.env.PORT || '80');
+var port = normalizePort(process.env.PORT || '443');
 app.set('port', port);
 
 /**
  * Create HTTP server.
  */
 
-var server = http.createServer(app);
+var server = https.createServer(app);
 
 /**
  * Listen on provided port, on all network interfaces.

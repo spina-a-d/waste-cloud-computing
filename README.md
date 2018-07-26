@@ -20,6 +20,10 @@ If logging is desired a log file can be created and pointed to like this instead
 
 Using the `cd` command before running the probe is essential because the `probe.bash` file needs to access local storage.
 
+Once the crontab is saved it can be checked for correctness with `sudo crontab -l` to list the current crontab.  
+
+Create an image of the newly modified Virtual Machine.  New Virtual Machines spawned from this image with the probe and crontab will automatically send data to the service.
+
 ### Server
 The server uses NodeJS and should be setup using the appropriate steps.  Ensure NodeJS and npm are installed on the machine running the server.  `cd` into the `cloudComputeCostWaste` directory and run `npm install`.  After this is run, the server can be started with `npm start`.  If it is desirable to run the server without a terminal open, one option is the pm2 library.  Then the server is started with `pm2 start npm -- start`.
 
