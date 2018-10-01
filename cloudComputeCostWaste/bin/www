@@ -9,9 +9,8 @@ var debug = require('debug')('cloudcomputecostwaste:server');
 var https = require('https');
 var fs = require('fs');
 const options = {
-  key: fs.readFileSync("./ssl/universalcloudmonitoring.pem"),
-  cert: fs.readFileSync("./ssl/www_universalcloudmonitoring_com.crt"),
-  chain: fs.readfileSync("./ssl/www_universalcloudmonitoring_com.ca-bundle")
+  key: fs.readFileSync("./ssl/universalcloudmonitoring.pem", 'utf8'),
+  cert: fs.readFileSync("./ssl/www_universalcloudmonitoring_com.crt", 'utf8')
 };
 
 /**
@@ -25,7 +24,7 @@ app.set('port', port);
  * Create HTTP server.
  */
 
-var server = https.createServer(app);
+var server = https.createServer(options, app);
 
 /**
  * Listen on provided port, on all network interfaces.
