@@ -1,12 +1,13 @@
-/*TODO:: Define github logo with 'light'*/
-
 /*defining colours*/
 :root {
-	--dark-heavy: #071e22;
-	--dark-medium: #1d7874;
-	--dark-soft: #679289;
-	--complement: #c44536;
-	--light: #f4c095;
+    --dark-heavy: #1976d2;
+    --dark-medium: #2196f3;
+    --dark-soft: #bbdefb;
+    --complement: #8bc34a;
+    --light: #BDBDBD;
+    --text: #FFFFFF;
+    --secondary-text: #757575;
+    --primary-text: #212121;
 }
 
 h2 {

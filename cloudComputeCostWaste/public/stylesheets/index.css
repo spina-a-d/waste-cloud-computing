@@ -1,17 +1,19 @@
-/*TODO:: Define github logo with 'light'*/
-
 /*defining colours*/
 :root {
-    --dark-heavy: #071e22;
-    --dark-medium: #1d7874;
-    --dark-soft: #679289;
-    --complement: #c44536;
-    --light: #f4c095;
+    --dark-heavy: #1976d2;
+    --dark-medium: #2196f3;
+    --dark-soft: #bbdefb;
+    --complement: #8bc34a;
+    --light: #BDBDBD;
+    --text: #FFFFFF;
+    --secondary-text: #757575;
+    --primary-text: #212121;
 }
 
 h2 {
 	padding-top: 60px;
 	padding-left: 20px;
+    font-size: 48pt;
 	font-family: 'Oxygen Mono', monospace;
 }
 
@@ -22,22 +24,25 @@ h3{
 /*colouring columns*/
 #intro-column {
 	padding: 40px;
-    background-color: var(--light);
-    color: var(--dark-heavy);
+    background-color: white;
+    color: var(--text);
     min-height: 60vh;
+    background-image: url('/images/techcloud.png');
 }
+
 #welcome-column {
 	padding: 40px;
-	color: var(--dark-heavy);
-    background-color: var(--dark-medium);
+	color: var(--primary-text);
+    background-color: var(--white);
     min-height: 40vh;
 }
 #info-column {
 	font-family: 'Oxygen Mono', monospace;
-	color: var(--dark-heavy);
+	color: var(--primary-text);
 	padding: 40px;
     background-color: var(--complement);;
     min-height: 40vh;
+    font-size: 14pt;
 }
 /*typewriter the intro*/
 .typewriter {
@@ -45,7 +50,14 @@ h3{
 }
 
 .typewriter h1 {
-	color: var(--dark-heavy);
+    moz-text-fill-color: var(--text);
+    -webkit-text-fill-color: var(--text);
+    -moz-text-stroke-color: var(--primary-text);
+    -webkit-text-stroke-color: var(--primary-text);
+    -moz-text-stroke-width: 1px;  
+    -webkit-text-stroke-width: 1px;
+    font-weight: bold;
+	color: var(--text);
 	font-size: 3vw;
   	font-family: 'Oxygen Mono', monospace;
   	overflow: hidden; /* Ensures the content is not revealed until the animation */

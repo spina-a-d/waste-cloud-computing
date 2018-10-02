@@ -1,10 +1,13 @@
 /*defining colours*/
 :root {
-    --dark-heavy: #071e22;
-    --dark-medium: #1d7874;
-    --dark-soft: #679289;
-    --complement: #c44536;
-    --light: #f4c095;
+    --dark-heavy: #1976d2;
+    --dark-medium: #2196f3;
+    --dark-soft: #bbdefb;
+    --complement: #8bc34a;
+    --light: #BDBDBD;
+    --text: #FFFFFF;
+    --secondary-text: #757575;
+    --primary-text: #212121;
 }
 
 #myLoginBar {
@@ -34,14 +37,14 @@
     padding: 8px 8px 8px 32px;
     text-decoration: none;
     font-size: 25px;
-    color: var(--complement);
+    color: var(--text);
     display: block;
     transition: 0.3s;
 }
 
 /* When you mouse over the navigation links, change their color */
 .sidenav a:hover {
-    color: var(--light);;
+    color: var(--secondary-text);
 }
 
 /* Position and style the close button (top right corner) */
@@ -49,19 +52,19 @@
 	padding: 8px 8px 8px 32px;
     text-decoration: none;
     font-size: 25px;
-    color: var(--complement);
+    color: var(--text);
     display: block;
     transition: 0.3s;
 }
 
 /* When you mouse over the navigation links, change their color */
 .sidenav #sidebar-menu-toggle:hover {
-	color: var(--light);
+	color: var(--secondary-text);
 }
  
 /* Position and style the close button (top right corner) */
 .sidenav #menu-toggle {
-	color: var(--complement);
+	color: var(--text);
     position: absolute;
     top: 30px;
     right: -20px;
@@ -92,14 +95,14 @@
     padding: 8px 8px 8px 32px;
     text-decoration: none;
     font-size: 16px;
-    color: var(--complement);
+    color: var(--text);
     display: block;
     transition: 0.3s;
 }
 
 /* When you mouse over the navigation links, change their color */
 .contactNav a:hover {
-    color: var(--light);
+    color: var(--secondary-text);
 }
 
 /* Position and style the close button (top left corner) */
@@ -123,10 +126,13 @@
     overflow: hidden; /* Allow overflow offscreen */
     padding-top: 60px; /* Place content 60px from the top */
     transition: 0.5s; /* 0.5 second transition effect to slide in the sidenav */
-
     text-align: center;
     padding: 20px 0;
     margin: 0px auto 0px auto;
+    border-style: solid;
+    border-width: medium;
+    border-color: var(--text);
+    border-radius: 5px 10px 15px 20px;
 }
 
 /* The contact menu links */
@@ -134,7 +140,7 @@
     padding: 8px 8px 8px 32px;
     text-decoration: none;
     font-size: 25px;
-    color: var(--complement);
+    color: var(--text);
     display: block;
     transition: 0.3s;
 }
