@@ -40,35 +40,48 @@
 				    </div>
 				    <div id="info-column" class="col-sm-8">
 				    	<h5> Your Applications: </h5>
-				    	<ul>
 				    		<% for(var i = 0; i < renderPackage.applications.length; ++i) {%>
-					    		<button class="accordion"><%-renderPackage.applications[i].name%> : <%-renderPackage.applications[i]._id%></button>
-								<div class="panel">
-					    			<form method="post">
-						    			<div class="form-group">
-			                                <li> 
-			                                	<button name="action" class="btn btn-danger" type="submit" value="app.delete.<%-renderPackage.applications[i]._id%>">Delete</button>
-			                                	<button name="action" class="btn btn-primary type="submit" value="image.create.<%-renderPackage.applications[i]._id%>">Add Image</button>
-			                                	<input type="text" name="name<%-renderPackage.applications[i]._id%>" value=""/>
-			                                </li>
-			                            </div>
-			                        </form>
-			                        <ul>
-			                    		<% for(var j = 0; j < renderPackage.applications[i].images.length; ++j) {%>
-			                    			<button class="accordion"><%-renderPackage.applications[i].images[j].name%> : <%-renderPackage.applications[i].images[j]._id%></button>
-											<div class="panel">
-					                    		<form method="post">
+								<div class="panel-group">
+								    <div class="panel panel-default">
+								      	<div class="panel-heading">
+									        <h4 class="panel-title">
+									        	<a data-toggle="collapse" href="#collapse1"><%-renderPackage.applications[i].name%> : <%-renderPackage.applications[i]._id%></a>
+		    								</h4>
+		    								<ul class="list-group">
+								    			<form method="post">
 									    			<div class="form-group">
-						                                <li> 
-						                                	<button name="action" class="btn btn-danger" type="submit" value="image.delete.<%-renderPackage.applications[i].images[j]._id%>">Delete</button>
-						                                	<button name="action" class="btn btn-success" type="submit" value="image.download.<%-renderPackage.applications[i].images[j]._id%>">Download</button>
+						                                <li class="list-group-item">
+						                                	<button name="action" class="btn btn-danger" type="submit" value="app.delete.<%-renderPackage.applications[i]._id%>">Delete</button>
+						                                	<button name="action" class="btn btn-primary type="submit" value="image.create.<%-renderPackage.applications[i]._id%>">Add Image</button>
+						                                	<input type="text" name="name<%-renderPackage.applications[i]._id%>" value=""/>
 						                                </li>
 						                            </div>
-					                        	</form>
-					                        </div>
-				                    	<% } %>
-			                    	</ul>
-			                    </div>
+						                        </form>
+						                    </ul>
+				                    		<% for(var j = 0; j < renderPackage.applications[i].images.length; ++j) {%>
+					                    		<div class="panel-group">
+												    <div class="panel panel-default">
+												      	<div class="panel-heading">
+													        <h4 class="panel-title">
+													        	<a data-toggle="collapse" href="#collapse1"><%-renderPackage.applications[i].images[j].name%> : <%-renderPackage.applications[i].images[j]._id%></a>
+						    								</h4>
+						    								<ul class="list-group">
+									                    		<form method="post">
+													    			<div class="form-group">
+										                                <li> 
+										                                	<button name="action" class="btn btn-danger" type="submit" value="image.delete.<%-renderPackage.applications[i].images[j]._id%>">Delete</button>
+										                                	<button name="action" class="btn btn-success" type="submit" value="image.download.<%-renderPackage.applications[i].images[j]._id%>">Download</button>
+										                                </li>
+										                            </div>
+									                        	</form>
+								                        	</ul>
+								                        </div>
+								                    </div>
+								                </div>
+					                    	<% } %>
+					                    </div>
+			                    	</div>
+			                	</div>
                         	<% } %>
                         </ul>
 				    </div>
@@ -76,20 +89,4 @@
 			</div>
 		</div>
 	</div>
-	<script>
-	var acc = document.getElementsByClassName("accordion");
-	var i;
-
-	for (i = 0; i < acc.length; i++) {
-	  acc[i].addEventListener("click", function() {
-	    this.classList.toggle("active");
-	    var panel = this.nextElementSibling;
-	    if (panel.style.maxHeight){
-	      panel.style.maxHeight = null;
-	    } else {
-	      panel.style.maxHeight = panel.scrollHeight + "px";
-	    }
-	  });
-	}
-	</script>
 </html>
