@@ -55,7 +55,7 @@
 			                        </form>
 			                        <ul>
 			                    		<% for(var j = 0; j < renderPackage.applications[i].images.length; ++j) {%>
-			                    			<button class="accordion"><%-renderPackage.applications[i].images[j].name%> : <%-renderPackage.applications[i].images[j]._id%></button>
+			                    			<button class="accordion-child"><%-renderPackage.applications[i].images[j].name%> : <%-renderPackage.applications[i].images[j]._id%></button>
 											<div class="panel">
 					                    		<form method="post">
 									    			<div class="form-group">
@@ -77,19 +77,32 @@
 		</div>
 	</div>
 	<script>
-	var acc = document.getElementsByClassName("accordion");
-	var i;
+		var acc = document.getElementsByClassName("accordion");
+		var i;
 
-	for (i = 0; i < acc.length; i++) {
-	  acc[i].addEventListener("click", function() {
-	    this.classList.toggle("active");
-	    var panel = this.nextElementSibling;
-	    if (panel.style.maxHeight){
-	      panel.style.maxHeight = null;
-	    } else {
-	      panel.style.maxHeight = panel.scrollHeight + "px";
-	    } 
-	  });
-	}
+		for (i = 0; i < acc.length; i++) {
+		  	acc[i].addEventListener("click", function() {
+			    this.classList.toggle("active");
+			    var panel = this.nextElementSibling;
+			    if (panel.style.maxHeight){
+			      	panel.style.maxHeight = null;
+			    } else {
+			      	panel.style.maxHeight = panel.scrollHeight + "px";
+			    } 
+		  	});
+		}
+		acc = document.getElementsByClassName("accordion-child");
+
+		for (i = 0; i < acc.length; i++) {
+		  	acc[i].addEventListener("click", function() {
+			    this.classList.toggle("active");
+			    var panel = this.nextElementSibling;
+			    if (panel.style.maxHeight){
+			      	panel.style.maxHeight = null;
+			    } else {
+			      	panel.style.maxHeight = panel.scrollHeight + "px";
+			    } 
+		  	});
+		}
 	</script>
 </html>

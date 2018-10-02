@@ -71,7 +71,7 @@ h3{
 		50% { border-color: #color: var(--complement) }
 }
 
-.accordion {
+.accordion, .accordion-child {
     background-color: #eee;
     color: #444;
     cursor: pointer;
@@ -84,11 +84,11 @@ h3{
     transition: 0.4s;
 }
 
-.active, .accordion:hover {
+.active, .accordion:hover, .accordion-child:hover {
     background-color: #ccc;
 }
 
-.accordion:after {
+.accordion:after, .accordion-child:after {
     content: '\002B';
     color: #777;
     font-weight: bold;
