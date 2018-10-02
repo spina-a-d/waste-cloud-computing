@@ -95,13 +95,18 @@
 
 		for (i = 0; i < acc.length; i++) {
 		  	acc[i].addEventListener("click", function() {
+		  		for (var j = 0; j < acc.length; j++) {
+			    	var panel = acc[j].this.nextElementSibling;
+			      	panel.style.maxHeight = null;
+			    }
 			    this.classList.toggle("active");
 			    var panel = this.nextElementSibling;
 			    if (panel.style.maxHeight){
 			      	panel.style.maxHeight = null;
 			    } else {
 			      	panel.style.maxHeight = panel.scrollHeight + "px";
-			    } 
+			    }
+
 		  	});
 		}
 	</script>
