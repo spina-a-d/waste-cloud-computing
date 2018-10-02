@@ -35,7 +35,7 @@ h3{
 }
 #info-column {
 	font-family: 'Oxygen Mono', monospace;
-	color: var(--dark-heavy);
+	color: var(--primary-text);
 	padding: 40px;
 	background-color: var(--complement);;
 	min-height: 75vh;
