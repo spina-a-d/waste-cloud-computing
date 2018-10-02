@@ -42,13 +42,11 @@
 				    	<h5> Your Applications: </h5>
 				    	<ul>
 				    		<% for(var i = 0; i < renderPackage.applications.length; ++i) {%>
-					    		<button class="accordion"><%-renderPackage.applications[i].name%></button>
+					    		<button class="accordion"><%-renderPackage.applications[i].name%> : <%-renderPackage.applications[i]._id%></button>
 								<div class="panel">
-									<p> test </p>
 					    			<form method="post">
 						    			<div class="form-group">
 			                                <li> 
-			                                	<%-renderPackage.applications[i].name%> : <%-renderPackage.applications[i]._id%>
 			                                	<button name="action" class="btn btn-danger" type="submit" value="app.delete.<%-renderPackage.applications[i]._id%>">Delete</button>
 			                                	<button name="action" class="btn btn-primary type="submit" value="image.create.<%-renderPackage.applications[i]._id%>">Add Image</button>
 			                                	<input type="text" name="name<%-renderPackage.applications[i]._id%>" value=""/>
@@ -57,12 +55,11 @@
 			                        </form>
 			                        <ul>
 			                    		<% for(var j = 0; j < renderPackage.applications[i].images.length; ++j) {%>
-			                    			<button class="accordion"><%-renderPackage.applications[i].name%></button>
+			                    			<button class="accordion"><%-renderPackage.applications[i].images[j].name%> : <%-renderPackage.applications[i].images[j]._id%></button>
 											<div class="panel">
 					                    		<form method="post">
 									    			<div class="form-group">
 						                                <li> 
-						                                	<%-renderPackage.applications[i].images[j].name%> : <%-renderPackage.applications[i].images[j]._id%>
 						                                	<button name="action" class="btn btn-danger" type="submit" value="image.delete.<%-renderPackage.applications[i].images[j]._id%>">Delete</button>
 						                                	<button name="action" class="btn btn-success" type="submit" value="image.download.<%-renderPackage.applications[i].images[j]._id%>">Download</button>
 						                                </li>
