@@ -107,3 +107,7 @@ h3{
     overflow: hidden;
     transition: max-height 0.2s ease-out;
 }
+
+.form-group {
+	padding: 12px;
+}

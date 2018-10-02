@@ -85,9 +85,11 @@
 			    this.classList.toggle("active");
 			    var panel = this.nextElementSibling;
 			    if (panel.style.maxHeight){
-			      	panel.style.maxHeight = null;
+			      	panel.style.maxHeight = panel.scrollHeight + "px";
+      				setTimeout(function(){panel.style.maxHeight=null;},0);
 			    } else {
-			      	panel.style.maxHeight = "initial";
+			      	panel.style.maxHeight = panel.scrollHeight + "px";
+      				setTimeout(function(){panel.style.maxHeight="initial";},200);
 			    } 
 		  	});
 		}
