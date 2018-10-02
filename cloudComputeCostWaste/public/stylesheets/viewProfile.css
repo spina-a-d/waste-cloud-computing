@@ -109,3 +109,7 @@ h3{
 .active:after {
     content: "\2796"; /* Unicode character for "minus" sign (-) */
 }
+
+.form-group {
+	padding: 10px;
+}
